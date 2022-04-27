@@ -1,0 +1,76 @@
+unit uPrincipal;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ComCtrls, Menus, ImgList, ActnList, ToolWin,
+  PlatformDefaultStyleActnCtrls, ActnMan, ExtCtrls, uDMImagens;
+
+type
+  T_frmPrincipal = class(TForm)
+    StatusBar1: TStatusBar;
+    acRelatorio: TActionList;
+    ImageList1: TImageList;
+    MainMenu1: TMainMenu;
+    acDevolucaoTipo: TAction;
+    acProdutos: TAction;
+    Timer1: TTimer;
+    acConfiguraSistema: TActionManager;
+    acDevolucaoClientes: TAction;
+    acDevolucaoFornecedores: TAction;
+    acEncerraSistema: TAction;
+    acFaturamento: TAction;
+    Action1: TAction;
+    acGrupo: TAction;
+    ToolBar1: TToolBar;
+    ToolButton1: TToolButton;
+    Action2: TAction;
+    ToolButton2: TToolButton;
+    ToolButton3: TToolButton;
+    procedure FormCreate(Sender: TObject);
+  private
+    procedure acAgendaComprasExecute(Sender: TObject);
+    { Private declarations }
+  public
+    { Public declarations }
+    Versao : String[100];
+  end;
+
+var
+  _frmPrincipal: T_frmPrincipal;
+
+implementation
+
+uses  uTelaCompras, uRotinasGenericas, uAgendaLaboratorio;
+
+{$R *.dfm}
+
+procedure T_frmPrincipal.acAgendaComprasExecute(Sender: TObject);
+begin
+  _frmAgendaCompras :=  T_frmAgendaCompras.Create(Self);
+  _frmAgendaCompras.Show;
+end;
+
+
+
+
+procedure T_frmPrincipal.FormCreate(Sender: TObject);
+begin
+  Versao:='SisCpa - Sistemas Compras Versão 2.00.01';
+ _dtSistema:=DataSistema;
+ DataEmpresa;
+
+ if _dtPedido<>_dtEmpresa then
+ begin
+   Mensagem('Data Empresa Ainda Não Foi Alterada');
+ end;
+    _nrcomprador:=1;
+    _login:='TESTE';
+    _dsNomeCompurador:=GetComputerNetName;
+  _frmPrincipal.Caption:= VERSAO+',  '+
+                           DataExtenso(_dtEmpresa);
+
+end;
+
+end.

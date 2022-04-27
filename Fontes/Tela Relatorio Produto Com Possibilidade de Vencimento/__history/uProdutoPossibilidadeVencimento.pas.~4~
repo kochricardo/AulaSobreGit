@@ -1,0 +1,164 @@
+unit uProdutoPossibilidadeVencimento;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, DB, DBClient, Grids, DBGrids, ExtCtrls, StdCtrls, Buttons, ComCtrls,
+  uAuxiliarCompras,uRotinasGenericas;
+
+type
+  T_frmProdutoPossibilidadeVencimento = class(TForm)
+    StatusBar1: TStatusBar;
+    GroupBox3: TGroupBox;
+    Label3: TLabel;
+    Label5: TLabel;
+    Label18: TLabel;
+    Label4: TLabel;
+    Label6: TLabel;
+    _edtNrFornecedor: TEdit;
+    _edtNomeFornecedor: TEdit;
+    _cbxOpcaoCDs: TComboBox;
+    _edtNrComprador: TEdit;
+    _edtNomeComprador: TEdit;
+    _btnParaExcel: TBitBtn;
+    _btnAbreTabela: TBitBtn;
+    GroupBox1: TGroupBox;
+    _dbgProduto: TDBGrid;
+    _dsProdutoFornecedor: TDataSource;
+    _cdsProdutoFornecedor: TClientDataSet;
+    procedure _btnAbreTabelaClick(Sender: TObject);
+    procedure _edtNrFornecedorKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure _edtNrCompradorKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+  private
+    procedure setGridTabelaFornecedor;
+    procedure MostraDadosComprador;
+    procedure MostraDadosFornecedor;
+    { Private declarations }
+  public
+    { Public declarations }
+    DadosComprador :TDadosComprador;
+     DadosFornecedor :TDescricaoFornecedor;
+
+  end;
+
+var
+  _frmProdutoPossibilidadeVencimento: T_frmProdutoPossibilidadeVencimento;
+
+implementation
+
+
+
+
+
+{$R *.dfm}
+
+procedure T_frmProdutoPossibilidadeVencimento._btnAbreTabelaClick(Sender: TObject);
+var
+  nrComprador,
+  nrCd,
+  nrFornecedor :integer;
+  idReservaPedido,
+  idReservaVencido,
+  idReservaAvaria,
+  idReservaBloqueado :Boolean;
+
+begin
+
+  idReservaPedido:=false;
+  idReservaVencido:=false;
+  idReservaAvaria:=false;
+  idReservaBloqueado :=false;
+
+
+  case _rgReserva.ItemIndex of
+       0: idReservaPedido:=true;
+       1: idReservaVencido:=true;
+       2: idReservaAvaria:=true;
+       3: idReservaBloqueado :=true;
+
+  end;
+
+  MostraDadosFornecedor;
+  MostraDadosComprador;
+  nrComprador  :=  StrToIntDef(_edtNrComprador.Text,0);
+  nrCd         :=  StrToIntDef(copy(_cbxOpcaoCDs.Text,1,2),0);
+
+  nrFornecedor :=  StrToIntDef(_edtNrFornecedor.Text,0);
+
+  _cdsProdutoFornecedor:=GeraTabelaProdutoPossibilidadedeVencimemto(nrFornecedor,nrComprador,nrCd);
+
+  if _cdsProdutoFornecedor<>nil then
+  begin
+    _dsProdutoFornecedor.DataSet:=_cdsProdutoFornecedor;
+    _cdsProdutoFornecedor.Open;
+    setGridTabelaFornecedor;
+  end;
+
+end;
+
+
+
+
+procedure T_frmProdutoPossibilidadeVencimento._edtNrCompradorKeyDown(
+  Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+ case Key of
+   VK_RETURN :MostraDadosComprador;
+
+
+ end;
+
+end;
+
+procedure T_frmProdutoPossibilidadeVencimento._edtNrFornecedorKeyDown(
+  Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+ case Key of
+   VK_RETURN :MostraDadosFornecedor;
+
+
+ end;
+
+end;
+
+procedure T_frmProdutoPossibilidadeVencimento.setGridTabelaFornecedor;
+begin
+
+   TIntegerField(_cdsProdutoFornecedor.FieldByName('CD_GRUPO_FORNECEDOR')).DisplayLabel:='Nr.Fornecedor';
+   TIntegerField(_cdsProdutoFornecedor.FieldByName('CD_GRUPO_FORNECEDOR')).DisplayWidth:=5;
+end;
+
+
+PROCEDURE T_frmProdutoPossibilidadeVencimento.MostraDadosComprador;
+begin
+    if Length(_edtNrComprador.Text)>0 then
+    begin
+        DadosComprador :=AbreDadosComprador(strtointdef(_edtNrComprador.Text,0));
+        if DadosComprador.nrComprador=0 then
+          _edtNomeComprador.Text:='Comprador não Localizado...';
+        if DadosComprador.nrComprador>0 then
+             _edtNomeComprador.Text:=DadosComprador.nmCompradorReduzido;
+    end;
+
+end;
+PROCEDURE T_frmProdutoPossibilidadeVencimento.MostraDadosFornecedor;
+begin
+               DadosFornecedor :=AbreDadosFornecedor(strtointdef(_edtNrFornecedor.Text,0));
+               if DadosFornecedor.nr_Fornecedor=0 then
+               begin
+                 _edtNomeFornecedor.Text:='Fornecedor não Localizado...';
+               end;
+              if DadosFornecedor.nr_Fornecedor>0 then
+              begin
+                 _edtNomeFornecedor.Text:=DadosFornecedor.nm_Fornecedor;
+                 _edtNrComprador.Text:= '';
+                 _edtNomeComprador.Text:= '';
+              end;
+
+end;
+
+
+end.

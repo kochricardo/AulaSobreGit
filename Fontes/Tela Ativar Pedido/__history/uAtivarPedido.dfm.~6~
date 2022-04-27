@@ -1,0 +1,61 @@
+object _frmAtivaPedido: T_frmAtivaPedido
+  Left = 0
+  Top = 0
+  Caption = 'AtivarPedido'
+  ClientHeight = 282
+  ClientWidth = 363
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  FormStyle = fsMDIChild
+  OldCreateOrder = False
+  Visible = True
+  OnClose = FormClose
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label1: TLabel
+    Left = 58
+    Top = 39
+    Width = 47
+    Height = 13
+    Caption = 'Nr.Pedido'
+  end
+  object StatusBar1: TStatusBar
+    Left = 0
+    Top = 263
+    Width = 363
+    Height = 19
+    Panels = <>
+    ExplicitWidth = 449
+  end
+  object _edtNumeroPedido: TEdit
+    Left = 56
+    Top = 56
+    Width = 121
+    Height = 21
+    Alignment = taRightJustify
+    NumbersOnly = True
+    TabOrder = 1
+    OnKeyDown = _edtNumeroPedidoKeyDown
+  end
+  object BitBtn1: TBitBtn
+    Left = 56
+    Top = 112
+    Width = 121
+    Height = 25
+    Caption = 'Ativar Pedido'
+    DoubleBuffered = True
+    ParentDoubleBuffered = False
+    TabOrder = 2
+    OnClick = BitBtn1Click
+  end
+  object _cdsTabelaLeadTime: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 232
+    Top = 48
+  end
+end

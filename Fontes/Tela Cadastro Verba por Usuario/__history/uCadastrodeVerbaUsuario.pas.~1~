@@ -1,0 +1,25 @@
+unit uCadastrodeVerbaUsuario;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ufrmModelo, DB, Menus, ActnList, ImgList, ComCtrls, Grids, DBGrids,
+  StdCtrls, Buttons, ExtCtrls, ToolWin;
+
+type
+  T_frmCadastroVerbaUsuario = class(T_frmModelo)
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmCadastroVerbaUsuario: T_frmCadastroVerbaUsuario;
+
+implementation
+
+{$R *.dfm}
+
+end.

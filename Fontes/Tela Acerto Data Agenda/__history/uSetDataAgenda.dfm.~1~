@@ -1,0 +1,17 @@
+inherited _frmPadrao1: T_frmPadrao1
+  Caption = '_frmPadrao1'
+  ExplicitWidth = 869
+  ExplicitHeight = 518
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited GroupBox1: TGroupBox
+    Height = 65
+    ExplicitHeight = 65
+  end
+  inherited GroupBox2: TGroupBox
+    Top = 65
+  end
+  inherited GroupBox3: TGroupBox
+    Top = 313
+  end
+end

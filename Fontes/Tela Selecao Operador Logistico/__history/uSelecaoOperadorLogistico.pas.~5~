@@ -1,0 +1,96 @@
+unit uSelecaoOperadorLogistico;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ComCtrls, uRotinasGenericas,
+  SqlExpr,DBGrids,DB,dBClient, Grids, StdCtrls;
+
+type
+  T_frmSelecaoOPeradorLogistico = class(TForm)
+    StatusBar1: TStatusBar;
+    GroupBox1: TGroupBox;
+    DBGrid1: TDBGrid;
+    _dsOperadorLogistico: TDataSource;
+    _cdsOperadorLogistico: TClientDataSet;
+  function GetOPeracaoLogistica(nrFornecedor: Integer): Integer;
+    procedure FormShow(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmSelecaoOPeradorLogistico: T_frmSelecaoOPeradorLogistico;
+  cdOPeradorLogisticoSelecao,
+  nrFornecedorLogisticoSelecao :Integer;
+
+implementation
+
+uses uDm;
+
+{$R *.dfm}
+
+
+procedure T_frmSelecaoOPeradorLogistico.FormShow(Sender: TObject);
+begin
+  GetOPeracaoLogistica(nrFornecedorLogisticoSelecao);
+end;
+
+function T_frmSelecaoOPeradorLogistico.GetOPeracaoLogistica(nrFornecedor:Integer):Integer;
+var
+    QryTemp :TSQLQuery;
+   _cdsTemp:TclientDataSet;
+
+begin
+ try
+   TestaConexaoBase(_dm._conexao,1);
+   QryTemp:=TSQLQuery.Create(nil);
+   QryTemp.SQLConnection:=_dm._conexao;
+   _cdsTemp:=TClientDataSet.Create(nil);
+   _cdsTemp.RemoteServer:=_dm._LocalConexao;
+   _cdsTemp.ProviderName:= '_dspGenerica';
+   QryTemp.SQLConnection:=_dm._conexao;
+   _dsOperadorLogistico.DataSet:=_cdsTemp;
+   with QryTemp do
+   begin
+    sql.Add('SELECT CD_FORNECEDOR,OL.CD_OPERADOR_LOGISTICO,');
+    sql.Add('DS_OPERADOR_LOGISTICO');
+    sql.Add('FROM');
+    sql.Add('PRDDM.DC_OL_FORNECEDOR OL_FOR,');
+    sql.Add('PRDDM.DC_OPERADOR_LOGISTICO OL');
+    sql.Add('WHERE');
+    sql.Add('OL_FOR.CD_OPERADOR=OL.CD_OPERADOR_LOGISTICO');
+    sql.Add('AND ID_SITUACAO=''A''');
+    sql.Add('AND CD_FORNECEDOR=:PnrFornecedor');
+    sql.Add('UNION ALL');
+    sql.Add('SELECT 1,OL.CD_OPERADOR_LOGISTICO,DS_OPERADOR_LOGISTICO');
+    sql.Add('FROM');
+    sql.Add('PRDDM.DC_OPERADOR_LOGISTICO OL');
+    sql.Add('WHERE');
+    sql.Add('OL.CD_OPERADOR_LOGISTICO=1');
+    sql.Add('ORDER BY CD_FORNECEDOR');
+    ParamByName('PnrFornecedor').AsInteger:=nrFornecedor;
+    result:=0;
+    if ExecSQL(false)>1 then
+       result:=ExecSQL(false);
+    Open;
+   end;
+   with _cdsOperadorLogistico do
+   begin
+     close;
+     CommandText:=QryTemp.Text;
+     Params.ParamByName('PnrFornecedor').AsInteger:=nrFornecedor;
+     open;
+   end;
+   if not _cdsOperadorLogistico.IsEmpty then
+     Result:=_cdsOperadorLogistico.RecordCount;
+
+ finally
+   FreeAndNil(QryTemp);
+ end;
+end;
+
+end.

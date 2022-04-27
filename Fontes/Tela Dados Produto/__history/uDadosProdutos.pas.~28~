@@ -1,0 +1,538 @@
+unit uDadosProdutos;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ComCtrls, StdCtrls, ExtCtrls, uProduto, DB, DBClient,
+  uAuxiliarCompras, Grids, DBGrids, TeEngine, Series, TeeProcs, Chart,dateUtils,
+  uRotinasGenericas;
+
+type
+  T_frmDadosProduto = class(TForm)
+    StatusBar1: TStatusBar;
+    _lbeCodigoProduto: TLabeledEdit;
+    _lbeProdutoApresentacao: TLabeledEdit;
+    _lbeCipado: TLabeledEdit;
+    _lbeCdInternoLaboratorio: TLabeledEdit;
+    _lbeCompradorMes: TLabeledEdit;
+    _lbeMudancaPreco: TLabeledEdit;
+    _lbeUltEntrada: TLabeledEdit;
+    _lbeUltimaSaida: TLabeledEdit;
+    _lbeFinalidade: TLabeledEdit;
+    _lbeLaboratorio: TLabeledEdit;
+    _lbeLinha: TLabeledEdit;
+    _lbeLocalizacao: TLabeledEdit;
+    _lbeRepasseIcms: TLabeledEdit;
+    _lbeRetemIcms: TLabeledEdit;
+    _lbeSuperfulo: TLabeledEdit;
+    _lbeUnidadeMedida: TLabeledEdit;
+    _edtEstoqueProblematico: TEdit;
+    Label1: TLabel;
+    Label2: TLabel;
+    _edtReservaPedido: TEdit;
+    _edtReservaVencido: TEdit;
+    Label3: TLabel;
+    _edtEstoqueFisico: TEdit;
+    Label4: TLabel;
+    _edtValorEstoqueFinanceiro: TEdit;
+    Label5: TLabel;
+    _edtTaxaIPI: TEdit;
+    Label6: TLabel;
+    _edtEmbalagemCompra: TEdit;
+    Label7: TLabel;
+    _edtEmbalagemVenda: TEdit;
+    Label8: TLabel;
+    _edtPrecoCompra: TEdit;
+    Label9: TLabel;
+    _edtdescontoPadrao: TEdit;
+    Label10: TLabel;
+    _edtPrecoAtual: TEdit;
+    Label11: TLabel;
+    _edtPrecoVendaAnterior: TEdit;
+    Label12: TLabel;
+    Label18: TLabel;
+    _cbxOpcaoCDs: TComboBox;
+    _edtCurva: TEdit;
+    Label13: TLabel;
+    _cdsVendasProduto: TClientDataSet;
+    _dsVendasProduto: TDataSource;
+    _chtVendas: TChart;
+    Series1: TBarSeries;
+    _chtEntradas: TChart;
+    BarSeries1: TBarSeries;
+    _chtPedidos: TChart;
+    BarSeries2: TBarSeries;
+    _cdsEntradas: TClientDataSet;
+    _cdsUltimospedido: TClientDataSet;
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure _lbeCodigoProdutoKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+  private
+    procedure SetDadosProduto;
+    procedure ZeraArray;
+    procedure CarregaVendasArraySC;
+    procedure MontaGraficoSC;
+    procedure FiltraVendaLaboratorio(nrProduto, nrEmpresa,
+      nrOperadorLogistico: Integer);
+    function MaiorVendaProduto(PnrProduto,PnrCD:Integer): double;
+    procedure MontaGraficoIncial;
+    procedure CarregaEntradas;
+    procedure FiltraEntradaProduto(nrProduto, nrEmpresa,
+      nrOperadorLogistico: Integer);
+    procedure MontaGraficoEntradas;
+    function MaiorEntradaProduto(PnrProduto, PnrCD: Integer): double;
+    procedure CarregaPedidos;
+    procedure MontaGraficoPedidos;
+    function MaiorpedidoProduto(PnrProduto, PnrCD: Integer): double;
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmDadosProduto: T_frmDadosProduto;
+  DadosProduto :TMercadoria;
+  nrCdFisico  :Integer;
+  qtVendaMesSC: array[1..13] of double;
+  qtVendaMesRS: array[1..13] of double;
+  qtEntradas  : array[1..13] of double;
+  qtPedidos   : array[1..13] of double;
+
+
+implementation
+
+{$R *.dfm}
+
+procedure T_frmDadosProduto.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+ Action:=cafree;
+end;
+
+procedure T_frmDadosProduto.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  case key of
+    VK_ESCAPE : close;
+  end;
+end;
+
+procedure T_frmDadosProduto._lbeCodigoProdutoKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+var
+ nrTemp,dgtemp :Integer;
+ stTemp:String;
+begin
+  case key of
+  VK_RETURN :begin
+               nrTemp:=StrToIntDef(copy( FormatFloat('0000000',StrToIntDef(_lbeCodigoProduto.Text,0)),1,6),0);
+               dgTemp:=StrToIntDef(copy( FormatFloat('0000000',StrToIntDef(_lbeCodigoProduto.Text,0)),7,1),0);
+               if nrTemp=0 then
+               begin
+                 _lbeCodigoProduto.SetFocus;
+                 exit;
+               end;
+               if _cbxOpcaoCDs.ItemIndex=0 then
+                  nrCdFisico:=1;
+               if _cbxOpcaoCDs.ItemIndex=1 then
+                  nrCdFisico:=4;
+              ZeraArray;
+              MontaGraficoIncial;
+
+               DadosProduto:=GetMercadoriaNova(nrTemp,dgtemp,0,nrCdFisico,1);
+               if DadosProduto<>nil then
+                  SetDadosProduto;
+
+  end;
+
+  end;
+end;
+
+procedure T_frmDadosProduto.SetDadosProduto;
+var
+  stLinha:String[15];
+begin
+  _lbeCodigoProduto.Text:= FormatFloat('0000000',DadosProduto.cdProduto);
+  _lbeProdutoApresentacao.Text:= DadosProduto.nmProdutoCompleto;
+  _lbeFinalidade.Text:=DadosProduto.dsFinalidade;
+  _lbeCipado.Text:='Não';
+  if DadosProduto.idCipado='S' then
+     _lbeCipado.Text:='Sim';
+
+  _lbeRepasseIcms.Text:='Não';
+  if DadosProduto.idRepasseIcms='S' then
+     _lbeRepasseIcms.Text:='Sim';
+
+  _lbeRetemIcms.Text:='Não';
+  if DadosProduto.idRetemICMS='S' then
+    _lbeRetemIcms.Text:='Sim';
+  _lbeSuperfulo.Text:='Não';
+  if DadosProduto.idSuperfulo='S' then
+    _lbeSuperfulo.Text:='Sim';
+
+
+  _lbeLaboratorio.Text :=  FormatFloat('0000000',DadosProduto.nrLaboratorio)+' - '+
+                           DadosProduto.dsRazaoSocialFornecedor;
+
+  _lbeCdInternoLaboratorio.Text:=DadosProduto.cdInternoFornecedor;
+
+     if DadosProduto.nrTipoProduto=1 then
+      stLinha:='Medicamento';
+   if DadosProduto.nrTipoProduto=2 then
+      stLinha:='Perfumaria';
+   if DadosProduto.nrTipoProduto>2 then
+      stLinha:='Outros';
+     _lbeLinha.Text:=stLinha;
+    _lbeLocalizacao.Text:= DadosProduto.dsLocalizacao;
+    _lbeMudancaPreco.Text:=FormatDateTime('DD/MM/YYYY',DadosProduto.dtAtualizacaoPreco);
+    _edtPrecoAtual.Text  :=FormatFloat('###,###,##0.00',DadosProduto.vlPrecoVenda);
+    _edtPrecoCompra.Text  :=FormatFloat('###,###,##0.00',DadosProduto.vlPrecoCompra);
+    _edtTaxaIPI.Text       :=FormatFloat('###,###,##0.00',DadosProduto.pcIpiProduto);
+    _edtdescontoPadrao.Text  :=FormatFloat('###,###,##0.00',DadosProduto.pcDescontoPadrao);
+    _edtValorEstoqueFinanceiro.Text  :=FormatFloat('###,###,##0.00',DadosProduto.vlFinanceiroEstoque);
+
+    _edtPrecoVendaAnterior.Text  :=FormatFloat('###,###,##0.00',DadosProduto.vlPrecoVendaAnterior);
+    _lbeUltEntrada.Text          :=FormatDateTime('DD/MM/YYYY',DadosProduto.dtUltimaEntrada);
+    _lbeUltimaSaida.Text         :=FormatDateTime('DD/MM/YYYY',DadosProduto.dtUltimaSaida);
+
+    _edtEmbalagemCompra.Text      :=FormatFloat('###,###,##0',DadosProduto.qtEmbalagemCompra);
+    _edtEmbalagemVenda.Text      :=FormatFloat('###,###,##0',DadosProduto.qtEmbalagemVenda);
+    _edtEstoqueFisico.Text       :=FormatFloat('###,###,##0',DadosProduto.qtEstoqueFISICO);
+    _edtEstoqueProblematico.Text :=FormatFloat('###,###,##0',DadosProduto.nrReservaProblematica);
+    _edtReservaPedido.Text       :=FormatFloat('###,###,##0',DadosProduto.nrUnidadeReservaPedido);
+    _edtReservaVencido.Text      :=FormatFloat('###,###,##0',DadosProduto.nrUnidadesVencidas);
+    _edtCurva.Text               :=DadosProduto.idCurva;
+    _lbeUnidadeMedida.Text       :=DadosProduto.dsUnidadeMedia;
+    Application.ProcessMessages;
+   _cdsVendasProduto:=DadosVendaMes(0,DadosProduto.nrProduto,nrCdFisico);
+    if _cdsVendasProduto<>NIL then
+    begin
+     _cdsVendasProduto.Open;
+     if _cdsVendasProduto.Active then
+     begin
+          _cdsVendasProduto.RecordCount;
+          _dsVendasProduto.DataSet:=_cdsVendasProduto;
+          CarregaVendasArraySC
+     end;
+     Application.ProcessMessages;
+     _cdsEntradas:=DadosEntradaUltimosMeses(0,DadosProduto.nrProduto,nrCdFisico);
+
+     if _cdsEntradas<>nil then
+     begin
+       CarregaEntradas;
+       MontaGraficoEntradas;
+     end;
+     Application.ProcessMessages;
+     _cdsUltimospedido:=DadosPedidosUltimosMeses(0,DadosProduto.nrProduto,nrCdFisico);
+     if _cdsUltimospedido<>nil then
+     begin
+       CarregaPedidos;
+       MontaGraficoPedidos;
+     end;
+
+
+   end;
+
+
+end;
+
+procedure T_frmDadosProduto.ZeraArray;
+var
+ i :Integer;
+begin
+   for I := 1 to 13 do
+  begin
+    qtVendaMesSC[I] := 0;
+    qtVendaMesRS[I] := 0;
+    qtEntradas[i]   := 0;
+    qtPedidos[i]    := 0;
+  end;
+end;
+
+procedure T_frmDadosProduto.CarregaVendasArraySC;
+var
+nrMesReferencia :Integer;
+begin
+   _cdsVendasProduto.Open;
+   while not _cdsVendasProduto.Eof do
+   begin
+      nrMesReferencia:=_cdsVendasProduto.FieldByName('MES').AsInteger;
+      qtVendaMesSC[nrMesReferencia] := _cdsVendasProduto.FieldByName('NR_UNIDADES').AsInteger;
+     _cdsVendasProduto.Next;
+   end;
+   MontaGraficoSC;
+end;
+
+procedure T_frmDadosProduto.CarregaEntradas;
+var
+nrMesReferencia :Integer;
+begin
+   _cdsEntradas.Open;
+   while not _cdsEntradas.Eof do
+   begin
+      nrMesReferencia:=_cdsEntradas.FieldByName('MES').AsInteger;
+      qtEntradas[nrMesReferencia] := _cdsEntradas.FieldByName('QT_ENTRADA').AsInteger;
+     _cdsEntradas.Next;
+   end;
+   MontaGraficoEntradas;
+end;
+procedure T_frmDadosProduto.CarregaPedidos;
+var
+nrMesReferencia :Integer;
+begin
+   _cdsUltimospedido.Open;
+   while not _cdsUltimospedido.Eof do
+   begin
+      nrMesReferencia:=_cdsUltimospedido.FieldByName('MES').AsInteger;
+      qtEntradas[nrMesReferencia] := _cdsUltimospedido.FieldByName('QT_PEDIDAS').AsInteger;
+     _cdsEntradas.Next;
+   end;
+   MontaGraficoPedidos;
+end;
+
+
+procedure T_frmDadosProduto.MontaGraficoSC;
+var
+  I: Integer;
+  nrReferencia:Double;
+  Mesreferencia,
+  contaMes: Integer;
+  stMes,stTexto: string[12];
+  dtreferencia: tdate;
+  nmTituloGrafico :String;
+  corBarra :Tcolor;
+begin
+  dtreferencia := IncMonth(dtPedido, -12);
+  stMes := ShortMonthNames[MonthOf(dtreferencia)];
+  Mesreferencia := MonthOf(dtreferencia);
+
+  contaMes := Mesreferencia;
+  Series1.Clear;
+  nmTituloGrafico:='Vendas do CD RS';
+  corBarra := $000080FF; ;
+  if nrCdFisico=1 then
+  begin
+     nmTituloGrafico:='Vendas do CD SC';
+     corBarra := clTeal;
+  end;
+  _chtVendas.Title.Caption:=nmTituloGrafico;
+   nrReferencia := MaiorVendaProduto(_cdsVendasProduto.FieldByName('CD_MERCADORIA').AsInteger,1);
+
+   for I := 1 to 12 do
+   begin
+      if contaMes>12 then
+         contaMes:=1;
+     stTexto:= UpperCase(ShortMonthNames[contaMes]);
+     stMes :=UpperCase(Copy(stTexto,1,1))+LowerCase(Copy(stTexto,2,Length(stTexto)));
+     Series1.Add(qtVendaMesSC[contaMes],stMes,corBarra);
+     inc(contaMes);
+   end;
+  Series1.Add(qtVendaMesSC[13],'Atual',corBarra);
+ end;
+
+procedure T_frmDadosProduto.MontaGraficoEntradas;
+var
+  I: Integer;
+  nrReferencia:Double;
+  Mesreferencia,
+  contaMes: Integer;
+  stMes,stTexto: string[12];
+  dtreferencia: tdate;
+  nmTituloGrafico :String;
+  corBarra :Tcolor;
+begin
+  dtreferencia := IncMonth(dtPedido, -12);
+  stMes := ShortMonthNames[MonthOf(dtreferencia)];
+  Mesreferencia := MonthOf(dtreferencia);
+
+  contaMes := Mesreferencia;
+  BarSeries1.Clear;
+  nmTituloGrafico:='Entadas no CD RS';
+  corBarra := $000080FF; ;
+  if nrCdFisico=1 then
+  begin
+     nmTituloGrafico:='Entadas no CD SC';
+     corBarra := clTeal;
+  end;
+  _chtEntradas.Title.Caption:=nmTituloGrafico;
+   nrReferencia := MaiorEntradaProduto(0,1);
+   _chtEntradas.LeftAxis.SetMinMax(0,nrReferencia*1.25);
+   for I := 1 to 12 do
+   begin
+      if contaMes>12 then
+         contaMes:=1;
+     stTexto:= UpperCase(ShortMonthNames[contaMes]);
+     stMes :=UpperCase(Copy(stTexto,1,1))+LowerCase(Copy(stTexto,2,Length(stTexto)));
+     BarSeries1.Add(qtEntradas[contaMes],stMes,corBarra);
+     inc(contaMes);
+   end;
+  BarSeries1.Add(qtEntradas[13],'Atual',corBarra);
+ end;
+
+procedure T_frmDadosProduto.MontaGraficoPedidos;
+var
+  I: Integer;
+  nrReferencia:Double;
+  Mesreferencia,
+  contaMes: Integer;
+  stMes,stTexto: string[12];
+  dtreferencia: tdate;
+  nmTituloGrafico :String;
+  corBarra :Tcolor;
+begin
+  dtreferencia := IncMonth(dtPedido, -12);
+  stMes := ShortMonthNames[MonthOf(dtreferencia)];
+  Mesreferencia := MonthOf(dtreferencia);
+
+  contaMes := Mesreferencia;
+  BarSeries2.Clear;
+  nmTituloGrafico:='Pedidos para o CD RS';
+  corBarra := $000080FF; ;
+  if nrCdFisico=1 then
+  begin
+  nmTituloGrafico:='Pedidos para o CD SC';
+     corBarra := clTeal;
+  end;
+  _chtEntradas.Title.Caption:=nmTituloGrafico;
+   nrReferencia := MaiorpedidoProduto(0,1);
+   _chtPedidos.LeftAxis.SetMinMax(0,nrReferencia*1.25);
+   for I := 1 to 12 do
+   begin
+      if contaMes>12 then
+         contaMes:=1;
+     stTexto:= UpperCase(ShortMonthNames[contaMes]);
+     stMes :=UpperCase(Copy(stTexto,1,1))+LowerCase(Copy(stTexto,2,Length(stTexto)));
+     BarSeries2.Add(qtEntradas[contaMes],stMes,corBarra);
+     inc(contaMes);
+   end;
+  BarSeries2.Add(qtEntradas[13],'Atual',corBarra);
+ end;
+
+function T_frmDadosProduto.MaiorEntradaProduto(PnrProduto,PnrCD:Integer): double;
+var
+  I: Integer;
+  nrMaiorEntrada: double;
+
+begin
+  nrMaiorEntrada := 0;
+  begin
+    for I := 1 to 13 do
+    begin
+      if nrMaiorEntrada < qtEntradas[I] then
+        nrMaiorEntrada := qtEntradas[I];
+    end;
+    result := nrMaiorEntrada;
+  end;
+end;
+
+function T_frmDadosProduto.MaiorpedidoProduto(PnrProduto,PnrCD:Integer): double;
+var
+  I: Integer;
+  nrMaiorPedido: double;
+
+begin
+  nrMaiorPedido := 0;
+  begin
+    for I := 1 to 13 do
+    begin
+      if nrMaiorPedido < qtPedidos[I] then
+        nrMaiorPedido := qtPedidos[I];
+    end;
+    result := nrMaiorPedido;
+  end;
+end;
+
+function T_frmDadosProduto.MaiorVendaProduto(PnrProduto,PnrCD:Integer): double;
+var
+  I: Integer;
+  nrMaiorVenda: double;
+
+begin
+  nrMaiorVenda := 0;
+  FiltraVendaLaboratorio(PnrProduto, PnrCD,1);
+  begin
+    for I := 1 to 13 do
+    begin
+      if nrMaiorVenda < qtVendaMesSC[I] then
+        nrMaiorVenda := qtVendaMesSC[I];
+    end;
+    result := nrMaiorVenda;
+  end;
+end;
+
+procedure T_frmDadosProduto.FiltraEntradaProduto(nrProduto, nrEmpresa,
+  nrOperadorLogistico: Integer);
+var
+  stFiltroOperador: String;
+begin
+  with _cdsEntradas do
+  begin
+    filtered := false;
+    filter := 'CD_MERCADORIA=' + inttostr(nrProduto) + ' and CD_EMPRESA=' +
+      inttostr(nrEmpresa);
+    filtered := true;
+  end;
+end;
+
+
+procedure T_frmDadosProduto.FiltraVendaLaboratorio(nrProduto, nrEmpresa,
+  nrOperadorLogistico: Integer);
+var
+  stFiltroOperador: String;
+begin
+  stFiltroOperador := '';
+  if nrOperadorLogistico > 1 then
+    stFiltroOperador := format(' AND CD_OPERADOR_LOGISTICO=%d', [nrOperadorLogistico]);
+
+  with _cdsVendasProduto do
+  begin
+    filtered := false;
+    filter := 'CD_MERCADORIA=' + inttostr(nrProduto) + ' and CD_EMPRESA=' +
+      inttostr(nrEmpresa);
+    filtered := true;
+  end;
+end;
+
+procedure T_frmDadosProduto.MontaGraficoIncial;
+var
+  I: Integer;
+  nrReferencia:Double;
+  Mesreferencia,
+  contaMes: Integer;
+  stMes,stTexto: string[12];
+  dtreferencia: tdate;
+  nmTituloGrafico :String;
+  corBarra: TColor;
+
+
+begin
+  Series1.Clear;
+  BarSeries1.Clear;
+  nmTituloGrafico:='Vendas do CD RS';
+  corBarra := $000080FF; ;
+  if nrCdFisico=1 then
+  begin
+     nmTituloGrafico:='Vendas do CD SC';
+     corBarra := clTeal;
+  end;
+  _chtVendas.Title.Caption:=nmTituloGrafico;
+
+   for I := 1 to 12 do
+   begin
+      if contaMes>12 then
+         contaMes:=1;
+     stTexto:= UpperCase(ShortMonthNames[contaMes]);
+     stMes :=UpperCase(Copy(stTexto,1,1))+LowerCase(Copy(stTexto,2,Length(stTexto)));
+     Series1.Add(qtVendaMesSC[contaMes],stMes,corbarra);
+     BarSeries1.Add(qtVendaMesSC[contaMes],stMes,corbarra);
+     BarSeries2.Add(qtVendaMesSC[contaMes],stMes,corbarra);
+     inc(contaMes);
+   end;
+  Series1.Add(qtVendaMesSC[13],'Atual',corBarra);
+  BarSeries1.Add(qtVendaMesSC[13],stMes,corbarra);
+  BarSeries2.Add(qtVendaMesSC[13],stMes,corbarra);
+end;
+
+end.

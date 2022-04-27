@@ -1,0 +1,49 @@
+unit uInativadosCadastrados;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, Grids, DBGrids, DB, DBClient, StdCtrls, ComCtrls, Buttons,
+  uRotinasGenericas, uAuxiliarCompras;
+
+type
+  T_frmCadastradosInativados = class(TForm)
+    StatusBar1: TStatusBar;
+    GroupBox1: TGroupBox;
+    _cdsInativadosCadastrados: TClientDataSet;
+    _dsInativadosCadastrados: TDataSource;
+    DBGrid1: TDBGrid;
+    Label1: TLabel;
+    Label2: TLabel;
+    _dtpDtInicio: TDateTimePicker;
+    _dtpDtFinal: TDateTimePicker;
+    _btnExecuta: TBitBtn;
+    _btnParaExcel: TBitBtn;
+    procedure FormCreate(Sender: TObject);
+    procedure _btnParaExcelClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmCadastradosInativados: T_frmCadastradosInativados;
+
+implementation
+
+{$R *.dfm}
+
+procedure T_frmCadastradosInativados.FormCreate(Sender: TObject);
+begin
+ _dtpDtInicio.Date := dtSistema-30;
+ _dtpDtFinal.Date  := dtsistema;
+end;
+
+procedure T_frmCadastradosInativados._btnParaExcelClick(Sender: TObject);
+begin
+ GETINCAR
+end;
+
+end.

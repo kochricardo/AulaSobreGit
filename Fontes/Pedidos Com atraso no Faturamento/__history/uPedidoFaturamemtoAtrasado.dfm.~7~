@@ -1,0 +1,172 @@
+object _frmPedidosFaturamentoAtrasados: T_frmPedidosFaturamentoAtrasados
+  Left = 0
+  Top = 0
+  Caption = 'Pedidos com Faturamento na Industria Atrasado '
+  ClientHeight = 417
+  ClientWidth = 928
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poDesktopCenter
+  Visible = True
+  OnClose = FormClose
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object StatusBar1: TStatusBar
+    Left = 0
+    Top = 398
+    Width = 928
+    Height = 19
+    Panels = <>
+    ExplicitLeft = 136
+    ExplicitTop = 392
+    ExplicitWidth = 0
+  end
+  object GroupBox1: TGroupBox
+    Left = 0
+    Top = 0
+    Width = 928
+    Height = 297
+    Align = alTop
+    Caption = 'Pedidos'
+    TabOrder = 1
+    object _dbgPedidosAtrasado: TDBGrid
+      Left = 2
+      Top = 15
+      Width = 924
+      Height = 280
+      Align = alClient
+      DataSource = _dsPedidosFaturamentoAtrasado
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      OnDrawColumnCell = _dbgPedidosAtrasadoDrawColumnCell
+    end
+  end
+  object GroupBox2: TGroupBox
+    Left = 0
+    Top = 297
+    Width = 928
+    Height = 105
+    Align = alTop
+    Caption = 'Totais'
+    TabOrder = 2
+    ExplicitLeft = 144
+    ExplicitTop = 352
+    ExplicitWidth = 185
+    object Label1: TLabel
+      Left = 64
+      Top = 38
+      Width = 104
+      Height = 13
+      Caption = 'Qtd. Unidades Pedido'
+    end
+    object Label2: TLabel
+      Left = 191
+      Top = 37
+      Width = 97
+      Height = 13
+      Caption = 'Valor Total de Custo'
+    end
+    object Label3: TLabel
+      Left = 320
+      Top = 37
+      Width = 112
+      Height = 13
+      Caption = 'Valor Total  Fornecedor'
+    end
+    object _edtQtdUnidades: TEdit
+      Left = 64
+      Top = 56
+      Width = 121
+      Height = 21
+      TabOrder = 0
+    end
+    object _edtValorCusto: TEdit
+      Left = 191
+      Top = 56
+      Width = 121
+      Height = 21
+      TabOrder = 1
+    end
+    object _edtValorFornecedor: TEdit
+      Left = 318
+      Top = 56
+      Width = 121
+      Height = 21
+      TabOrder = 2
+    end
+    object _btnFechar: TBitBtn
+      Left = 812
+      Top = 56
+      Width = 113
+      Height = 25
+      Caption = 'Fechar'
+      DoubleBuffered = True
+      ParentDoubleBuffered = False
+      TabOrder = 3
+      OnClick = _btnFecharClick
+    end
+    object _btnParaExcel: TBitBtn
+      Left = 548
+      Top = 56
+      Width = 145
+      Height = 26
+      Caption = 'Gerar Excel   '
+      DoubleBuffered = True
+      Glyph.Data = {
+        F6000000424DF600000000000000760000002800000010000000100000000100
+        0400000000008000000000000000000000001000000010000000000000000000
+        BF0000BF000000BFBF00BF000000BF00BF00BFBF0000C0C0C000808080000000
+        FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00DDDDDDDDDDDD
+        DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD00000DD00000000006660DD08888880E00
+        000DD000000000EEE080DD07778E0EEE0080DDD078E0EEE07700DDDD0E0EEE00
+        0000DDD0E0EEE080DDDDDD0E0EEE07080DDDD0E0EEE0777080DD0E0EEE0D0777
+        080D00EEE0DDD077700D00000DDDDD00000DDDDDDDDDDDDDDDDD}
+      ParentDoubleBuffered = False
+      TabOrder = 4
+      OnClick = _btnParaExcelClick
+    end
+  end
+  object _dsPedidosFaturamentoAtrasado: TDataSource
+    Left = 600
+    Top = 104
+  end
+  object _cdsPedidosFaturamentoAtrasado: TClientDataSet
+    Aggregates = <>
+    AggregatesActive = True
+    Params = <>
+    ProviderName = '_dspGenerica'
+    RemoteServer = _dm._LocalConexao
+    Left = 368
+    Top = 104
+    object _cdsPedidosFaturamentoAtrasadoQT_PEDIDO: TAggregateField
+      FieldName = 'QT_PEDIDO'
+      Active = True
+      Expression = 'SUM(QT_PEDIDO)'
+    end
+    object _cdsPedidosFaturamentoAtrasadoVT_PEDIDO_CUSTO: TAggregateField
+      FieldName = 'VT_PEDIDO_CUSTO'
+      Active = True
+      Expression = 'SUM(VT_CUSTO)'
+    end
+    object _cdsPedidosFaturamentoAtrasadoVT_PEDIDO_FORNECEDOR: TAggregateField
+      FieldName = 'VT_PEDIDO_FORNECEDOR'
+      Active = True
+      Expression = 'SUM( VT_FORNECEDOR)'
+    end
+  end
+  object SQLQuery1: TSQLQuery
+    Params = <>
+    Left = 520
+    Top = 56
+  end
+end

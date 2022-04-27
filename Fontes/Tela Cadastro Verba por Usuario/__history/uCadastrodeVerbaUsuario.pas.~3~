@@ -1,0 +1,184 @@
+unit uCadastrodeVerbaUsuario;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ufrmModelo, DB, Menus, ActnList, ImgList, ComCtrls, Grids, DBGrids,
+  StdCtrls, Buttons, ExtCtrls, ToolWin, FMTBcd, Mask, DBCtrls, SqlExpr,
+  Provider, DBClient;
+
+type
+  T_frmCadastroVerbaUsuario = class(T_frmModelo)
+    _cdsVerbaXUsuario: TClientDataSet;
+    _dspVerbaXUsuario: TDataSetProvider;
+    _sqlVerbaXUsuario: TSQLQuery;
+    _sqlPesquisaVerbaXUsuario: TSQLQuery;
+    _dspPesquisaVerbaXUsuario: TDataSetProvider;
+    _cdsPesquisaVerbaXUsuario: TClientDataSet;
+    _cdsVerbaXUsuarioNR_VERBA: TFMTBCDField;
+    _cdsVerbaXUsuarioNR_MATRICULA: TFMTBCDField;
+    _cdsVerbaXUsuarioNM_USUARIO: TWideStringField;
+    _cdsVerbaXUsuarioNM_USUARIO_1: TWideStringField;
+    _cdsVerbaXUsuarioDT_ATUALIZACAO: TSQLTimeStampField;
+    Label1: TLabel;
+    _dbeNumeroVerba: TDBEdit;
+    Label2: TLabel;
+    _dbeNrMatricula: TDBEdit;
+    Label3: TLabel;
+    DBEdit3: TDBEdit;
+    Label4: TLabel;
+    _edtFornecedor: TEdit;
+    _cdsPesquisaVerbaXUsuarioNR_VERBA: TFMTBCDField;
+    _cdsPesquisaVerbaXUsuarioNR_MATRICULA: TFMTBCDField;
+    _cdsPesquisaVerbaXUsuarioNM_USUARIO: TWideStringField;
+    _cdsPesquisaVerbaXUsuarioDT_ATUALIZACAO: TSQLTimeStampField;
+    _cdsPesquisaVerbaXUsuarioNM_USUARIO_1: TWideStringField;
+    procedure acGravarExecute(Sender: TObject);
+    procedure _dbgPesquisaDblClick(Sender: TObject);
+  private
+    function InsereGravaVerbaUsuario(PnrVerba, PnrMatricula: Integer;
+      PnmUsuario: String): Boolean;
+    function ConsultaVerbaUsuario(PnrVerba, PnrMatricula: Integer): Boolean;
+    { Private declarations }
+  public
+    { Public declarations }
+    nrVerba,
+    nrMatriculaUsuario:Integer;
+
+  end;
+
+var
+  _frmCadastroVerbaUsuario: T_frmCadastroVerbaUsuario;
+
+implementation
+
+uses uDm, uRotinasGenericas;
+
+{$R *.dfm}
+
+procedure T_frmCadastroVerbaUsuario.acGravarExecute(Sender: TObject);
+
+begin
+  //inherited;
+
+  if ds.DataSet.State=dsInsert then
+  begin
+    nrVerba           :=StrToIntDef(_dbeNumeroVerba.Text,0);
+    nrMatriculaUsuario:=StrToIntDef(_dbeNrMatricula.Text,0);
+    if (nrVerba>0) and (nrMatriculaUsuario>0) then
+    begin
+     try
+       InsereGravaVerbaUsuario(nrVerba,
+                               nrMatriculaUsuario,
+                               nmLogin);
+
+
+       Mensagem('Registro gravado!!!',MB_ICONERROR);
+     except
+       begin
+         Mensagem('Erro ao inserir registro!!!',MB_ICONERROR);
+         exit;
+       end;
+     end;
+
+    end;
+    _cdsVerbaXUsuario.Close;
+    _cdsVerbaXUsuario.Open;
+
+    PageControl1.ActivePage:=tbConsulta;
+
+
+  end;
+
+
+
+
+end;
+
+function T_frmCadastroVerbaUsuario.InsereGravaVerbaUsuario(PnrVerba,
+                                                           PnrMatricula:Integer;
+                                                           PnmUsuario:String):Boolean;
+var
+  qryTemp :TSQLQuery;
+begin
+
+  try
+   QryTemp:= TSQLQuery.Create(NIL);
+   QryTemp:=_dm.criaQueryGenerica;
+   with qryTemp do
+   begin
+    Close;
+    SQL.Add('INSERT INTO PRDDM.DC_VERBA_USUARIO');
+    SQL.Add('( NR_VERBA, NR_MATRICULA, NM_USUARIO, DT_ATUALIZACAO)');
+    SQL.Add('VALUES (:PNR_VERBA, :PNR_MATRICULA, :PNM_USUARIO, SYSDATE)');
+    ParamByName('PNR_VERBA').AsInteger    := PnrVerba;
+    ParamByName('PNR_MATRICULA').AsInteger:= PnrMatricula;
+    ParamByName('PNM_USUARIO').AsString   := PnmUsuario;
+    result :=false;
+    if ExecSQL(false)=1 then
+       result :=true
+   end;
+  except
+    begin
+     Mensagem('Erro ao vincular verba ao Usuario!!!',MB_ICONERROR);
+     result :=false;
+    end;
+  end;
+
+
+end;
+
+
+
+procedure T_frmCadastroVerbaUsuario._dbgPesquisaDblClick(Sender: TObject);
+begin
+  ConsultaVerbaUsuario(_cdsPesquisaVerbaXUsuarioNR_VERBA.AsInteger,
+                       _cdsPesquisaVerbaXUsuarioNR_MATRICULA.AsInteger);
+  inherited;
+
+end;
+
+function T_frmCadastroVerbaUsuario.ConsultaVerbaUsuario(PnrVerba,
+                                                        PnrMatricula:Integer):Boolean;
+var
+  qryTemp :TSQLQuery;
+begin
+
+  try
+   QryTemp:= TSQLQuery.Create(NIL);
+   QryTemp:=_dm.criaQueryGenerica;
+   with qryTemp do
+   begin
+    Close;
+    SQL.Add('Select    NR_VERBA, VU.NR_MATRICULA,US.NM_USUARIO,');
+    SQL.Add('VU.NM_USUARIO, DT_ATUALIZACAO');
+    SQL.Add(' FROM');
+    SQL.Add('PRDDM.DC_VERBA_USUARIO VU,');
+    SQL.Add('ACESSO.DC_USUARIO US');
+    SQL.Add('WHERE');
+    SQL.Add('VU.NR_MATRICULA=US.NR_MATRICULA');
+
+    SQL.Add(' AND NR_VERBA=:PnrVerba');
+    SQL.Add('AND VU.NR_MATRICULA=:PnrMatricula');
+   end;
+   with  _cdsVerbaXUsuario do
+   begin
+     close;
+     CommandText:=qryTemp.Text;
+     Params.ParamByName('PnrVerba').AsInteger    := PnrVerba;
+     Params.ParamByName('PnrMatricula').AsInteger:= PnrMatricula;
+     open;
+   end;
+
+  except
+    begin
+     Mensagem('Erro ao vincular verba ao Usuario!!!',MB_ICONERROR);
+     result :=false;
+    end;
+  end;
+
+
+end;
+
+end.

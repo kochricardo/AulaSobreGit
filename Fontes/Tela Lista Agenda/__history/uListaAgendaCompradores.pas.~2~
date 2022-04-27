@@ -1,0 +1,31 @@
+unit uListaAgendaCompradores;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, Grids, DBGrids, DB, DBClient, StdCtrls, Buttons, ExtCtrls;
+
+type
+  T_frmListaAgendaCompradores = class(TForm)
+    _gbFiltroLista: TGroupBox;
+    GroupBox1: TGroupBox;
+    _lbeComprador: TLabeledEdit;
+    _btnMostraPedidos: TBitBtn;
+    _cdsListaFornecedores: TClientDataSet;
+    _dsListaFornecedores: TDataSource;
+    DBGrid1: TDBGrid;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmListaAgendaCompradores: T_frmListaAgendaCompradores;
+
+implementation
+
+{$R *.dfm}
+
+end.

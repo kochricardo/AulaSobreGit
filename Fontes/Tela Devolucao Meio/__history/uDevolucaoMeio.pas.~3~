@@ -1,0 +1,52 @@
+unit uDevolucaoMeio;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ComCtrls, DB, DBClient, StdCtrls, CheckLst, Buttons;
+
+type
+  T_frmDevolucaoMeio = class(TForm)
+    Label8: TLabel;
+    Label9: TLabel;
+    btn_executar: TBitBtn;
+    _chkProcessadas: TCheckBox;
+    GroupBox1: TGroupBox;
+    _chkAgrupar: TCheckListBox;
+    GroupBox2: TGroupBox;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    _cbMeioTransmissao: TComboBox;
+    _cbDistrito: TComboBox;
+    _cbSetor: TComboBox;
+    _edtCodigoCliente: TEdit;
+    _dtpInicio: TDateTimePicker;
+    _dtpDtFinal: TDateTimePicker;
+    _cdsRelatorioDevolucao: TClientDataSet;
+    _cdsRelatorioDevolucaoVL_TOTAL: TAggregateField;
+    _dsRelatorioDevolucao: TDataSource;
+    StatusBar1: TStatusBar;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmDevolucaoMeio: T_frmDevolucaoMeio;
+
+implementation
+
+{$R *.dfm}
+
+procedure T_frmDevolucaoMeio.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+ Action:=caFree;
+end;
+
+end.

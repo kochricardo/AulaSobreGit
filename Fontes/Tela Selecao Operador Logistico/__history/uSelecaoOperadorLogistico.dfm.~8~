@@ -1,0 +1,70 @@
+object _frmSelecaoOPeradorLogistico: T_frmSelecaoOPeradorLogistico
+  Left = 411
+  Top = 173
+  Caption = 'Selecionar OPerador'
+  ClientHeight = 347
+  ClientWidth = 461
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poDesigned
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object StatusBar1: TStatusBar
+    Left = 0
+    Top = 328
+    Width = 461
+    Height = 19
+    Panels = <>
+    ExplicitLeft = 144
+    ExplicitTop = 216
+    ExplicitWidth = 0
+  end
+  object GroupBox1: TGroupBox
+    Left = 0
+    Top = 0
+    Width = 461
+    Height = 328
+    Align = alClient
+    Caption = 'Oparadores Logisticos'
+    TabOrder = 1
+    ExplicitLeft = 72
+    ExplicitTop = 16
+    ExplicitWidth = 185
+    ExplicitHeight = 105
+    object DBGrid1: TDBGrid
+      Left = 2
+      Top = 15
+      Width = 457
+      Height = 311
+      Align = alClient
+      Ctl3D = False
+      DataSource = _dsOperadorLogistico
+      ParentCtl3D = False
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+    end
+  end
+  object _dsOperadorLogistico: TDataSource
+    DataSet = _cdsOperadorLogistico
+    Left = 344
+    Top = 64
+  end
+  object _cdsOperadorLogistico: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    ProviderName = '_dspGenerica'
+    RemoteServer = _dm._LocalConexao
+    Left = 240
+    Top = 64
+  end
+end

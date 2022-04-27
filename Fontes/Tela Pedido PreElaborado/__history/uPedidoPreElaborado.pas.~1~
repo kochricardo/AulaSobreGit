@@ -1,0 +1,25 @@
+unit uPedidoPreElaborado;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ComCtrls;
+
+type
+  T_frmPedidoElabortado = class(TForm)
+    StatusBar1: TStatusBar;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmPedidoElabortado: T_frmPedidoElabortado;
+
+implementation
+
+{$R *.dfm}
+
+end.

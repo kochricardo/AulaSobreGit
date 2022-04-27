@@ -1,0 +1,162 @@
+object _frmMotivoInativacaoBloqueio: T_frmMotivoInativacaoBloqueio
+  Left = 0
+  Top = 0
+  Caption = '_frmObservacaoInativacaoBloqueio'
+  ClientHeight = 331
+  ClientWidth = 718
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poMainFormCenter
+  OnClose = FormClose
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object StatusBar1: TStatusBar
+    Left = 0
+    Top = 312
+    Width = 718
+    Height = 19
+    Panels = <
+      item
+        Width = 150
+      end
+      item
+        Width = 50
+      end>
+    ExplicitTop = 237
+    ExplicitWidth = 454
+  end
+  object GroupBox1: TGroupBox
+    Left = 0
+    Top = 0
+    Width = 718
+    Height = 306
+    Align = alTop
+    Caption = 'Motivos'
+    TabOrder = 1
+    ExplicitWidth = 575
+    object Label1: TLabel
+      Left = 16
+      Top = 188
+      Width = 35
+      Height = 13
+      Caption = 'motivo '
+    end
+    object Label2: TLabel
+      Left = 18
+      Top = 231
+      Width = 58
+      Height = 13
+      Caption = 'Observa'#231#227'o'
+    end
+    object _cbMotivo: TComboBox
+      Left = 16
+      Top = 204
+      Width = 209
+      Height = 21
+      TabOrder = 0
+    end
+    object _btnGravaObservacao: TBitBtn
+      Left = 16
+      Top = 274
+      Width = 153
+      Height = 25
+      Caption = 'Grava Observa'#231#227'o'
+      DoubleBuffered = True
+      Glyph.Data = {
+        42030000424D42030000000000003600000028000000110000000F0000000100
+        1800000000000C030000C30E0000C30E00000000000000000000BFBFBFBFBFBF
+        BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF7F0000FFFFFFBFBFBFBFBF
+        BFBFBFBFBFBFBFBFBFBFBFBFBF00BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
+        BFBFBFBFBFBF7F00007F00007F0000FFFFFFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
+        BF00BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF7F00007F00007F0000
+        7F0000FFFFFFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF00BFBFBF00000000000000
+        00000000000000007F00007F00007F0000FFFFFF7F00007F0000FFFFFFBFBFBF
+        BFBFBFBFBFBFBFBFBF00BFBFBF000000FFFFFFFFFFFFFFFFFF7F00007F00007F
+        0000FFFFFF000000BFBFBF7F00007F0000FFFFFFBFBFBFBFBFBFBFBFBF00BFBF
+        BF000000FFFFFF7F7F7F7F7F7F7F7F7F7F0000FFFFFFFFFFFF000000BFBFBFBF
+        BFBF7F0000FFFFFFBFBFBFBFBFBFBFBFBF00BFBFBF000000FFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFF000000BFBFBFBFBFBFBFBFBF7F0000FFFFFFBF
+        BFBFBFBFBF00BFBFBF000000FFFFFF7F7F7F7F7F7F7F7F7F7F7F7F7F7F7FFFFF
+        FF000000BFBFBFBFBFBFBFBFBFBFBFBF7F0000FFFFFFBFBFBF00BFBFBF000000
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF000000BFBFBFBFBFBFBFBF
+        BFBFBFBFBFBFBF7F0000FFFFFF00BFBFBF000000FFFFFF7F7F7F7F7F7FBFBFBF
+        BFBFBFBFBFBFFFFFFF000000BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF7F00
+        0000BFBFBF000000FFFFFFFFFFFFFFFFFFFFFFFF000000000000000000000000
+        BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF00BFBFBF000000FFFFFF7F
+        7F7F7F7F7FBFBFBF000000BFBFBF000000BFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
+        BFBFBFBFBFBFBFBFBF00BFBFBF000000FFFFFFFFFFFFFFFFFFFFFFFF00000000
+        0000BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF00BFBF
+        BF000000000000000000000000000000000000BFBFBFBFBFBFBFBFBFBFBFBFBF
+        BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF00BFBFBFBFBFBFBFBFBFBFBFBFBFBF
+        BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
+        BFBFBFBFBF00}
+      ParentDoubleBuffered = False
+      TabOrder = 1
+      OnClick = _btnGravaObservacaoClick
+    end
+    object _edtMotivoBloqueio: TEdit
+      Left = 18
+      Top = 246
+      Width = 409
+      Height = 21
+      TabOrder = 2
+    end
+    object GroupBox2: TGroupBox
+      Left = 2
+      Top = 15
+      Width = 714
+      Height = 167
+      Align = alTop
+      TabOrder = 3
+      ExplicitWidth = 571
+      object _DBGProdutosInativaBloqueia: TDBGrid
+        Left = 2
+        Top = 15
+        Width = 710
+        Height = 149
+        Align = alTop
+        Ctl3D = False
+        DataSource = _dsProdutosInativaBloqueia
+        ParentCtl3D = False
+        TabOrder = 0
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'Tahoma'
+        TitleFont.Style = []
+        OnDrawColumnCell = _DBGProdutosInativaBloqueiaDrawColumnCell
+        OnDblClick = _DBGProdutosInativaBloqueiaDblClick
+      end
+    end
+    object BitBtn1: TBitBtn
+      Left = 568
+      Top = 244
+      Width = 75
+      Height = 25
+      Caption = 'BitBtn1'
+      DoubleBuffered = True
+      ParentDoubleBuffered = False
+      TabOrder = 4
+      OnClick = BitBtn1Click
+    end
+  end
+  object _cdsProdutosInativaBloqueia: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    ProviderName = '_dspGenerica'
+    RemoteServer = _dm._LocalConexao
+    Left = 192
+    Top = 64
+  end
+  object _dsProdutosInativaBloqueia: TDataSource
+    DataSet = _cdsProdutosInativaBloqueia
+    Left = 312
+    Top = 64
+  end
+end

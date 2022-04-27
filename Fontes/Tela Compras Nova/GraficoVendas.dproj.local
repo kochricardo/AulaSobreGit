@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2015/12/09 10:17:02.000.370,=C:\Users\Ricardo\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2017/09/01 16:34:59.000.918,=C:\Users\ricardo\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2017/09/01 16:35:27.000.105,C:\Users\ricardo\Documents\RAD Studio\Projects\Teste Grafico\uTesteGrafico.dfm=C:\Users\ricardo\Documents\RAD Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2017/09/01 16:35:27.000.105,C:\Users\ricardo\Documents\RAD Studio\Projects\Teste Grafico\uTesteGrafico.pas=C:\Users\ricardo\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2017/09/05 10:04:15.000.021,C:\Users\ricardo\Documents\RAD Studio\Projects\Teste Grafico\GraficoVendas.dproj=C:\Users\ricardo\Documents\RAD Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>2017/09/05 10:05:30.000.205,=C:\Users\ricardo\Documents\RAD Studio\Projects\Teste Grafico\Unit1.pas</Transaction>
+    <Transaction>2017/09/05 10:05:46.000.053,C:\Users\ricardo\Documents\RAD Studio\Projects\Teste Grafico\uDM.dfm=C:\Users\ricardo\Documents\RAD Studio\Projects\Teste Grafico\Unit1.dfm</Transaction>
+    <Transaction>2017/09/05 10:05:46.000.053,C:\Users\ricardo\Documents\RAD Studio\Projects\Teste Grafico\uDM.pas=C:\Users\ricardo\Documents\RAD Studio\Projects\Teste Grafico\Unit1.pas</Transaction>
+  </Transactions>
+</BorlandProject>

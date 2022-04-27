@@ -1,0 +1,24 @@
+unit uListagemSaldoVerba;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs;
+
+type
+  T_frmListagemdeverbas = class(TForm)
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmListagemdeverbas: T_frmListagemdeverbas;
+
+implementation
+
+{$R *.dfm}
+
+end.

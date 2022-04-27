@@ -1,0 +1,152 @@
+unit uRelacaoNFeRecebida;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, FMTBcd, DB, DBClient, Provider, SqlExpr, ComCtrls, Grids,
+  DBGrids, StdCtrls, Menus, ExtCtrls, uDm, uAgendaLaboratorio,
+  uVisualizaCriticaPedidoNFe;
+
+type
+  T_frmNfeRelacaoNFeRecebida = class(TForm)
+    GroupBox1: TGroupBox;
+    DBGridConsultaGED: TDBGrid;
+    StatusBar1: TStatusBar;
+    SQLConsultaGED: TSQLQuery;
+    DSPConsultaGED: TDataSetProvider;
+    CDSConsultaGED: TClientDataSet;
+    DSConsultaGED: TDataSource;
+    Timer1: TTimer;
+    CDSConsultaGEDID_SITUACAO: TWideStringField;
+    CDSConsultaGEDCD_FORNECEDOR: TFMTBCDField;
+    CDSConsultaGEDNOMP_P: TWideStringField;
+    CDSConsultaGEDDT_EMISSAO: TSQLTimeStampField;
+    CDSConsultaGEDDT_ATUALIZACAO: TSQLTimeStampField;
+    CDSConsultaGEDNM_COMPRADOR_REDUZIDO: TWideStringField;
+    CDSConsultaGEDDS_NFE_CHAVE: TWideStringField;
+    CDSConsultaGEDNR_NFE: TFMTBCDField;
+    CDSConsultaGEDNR_PEDIDO_COMPRA: TFMTBCDField;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure DBGridConsultaGEDKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure DBGridConsultaGEDTitleClick(Column: TColumn);
+    procedure SAIR1Click(Sender: TObject);
+    procedure DBGridConsultaGEDKeyPress(Sender: TObject; var Key: Char);
+    procedure FormShow(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    procedure ConsultaGED;
+  end;
+
+var
+  _frmNfeRelacaoNFeRecebida: T_frmNfeRelacaoNFeRecebida;
+
+implementation
+
+uses URotinasGenericas, uVisualizaDadosNFe;
+
+{$R *.dfm}
+
+procedure T_frmNfeRelacaoNFeRecebida.ConsultaGED;
+begin
+  StatusBar1.SimpleText:='Aguarde, consultando relação de NFe..';
+  Application.ProcessMessages;
+
+  CDSConsultaGED.Close;
+  CDSConsultaGED.Params.ParamByName('NRO_COMPRADOR').AsInteger:=nrCompradorSistema;
+  //SQLConsultaGED.Params[1].AsString:=datetostr(data_sistema);
+  CDSConsultaGED.Open;
+  if CDSConsultaGED.RecordCount > 0 then
+    DBGridConsultaGED.SetFocus
+  else
+    ShowMessage('NENHUM REGISTRO FOI ENCONTRADO');
+
+  StatusBar1.SimpleText:='QUANTIDADE DE REGISTROS: ' + inttostr(CDSConsultaGED.RecordCount);
+  Application.ProcessMessages;
+end;
+
+procedure T_frmNfeRelacaoNFeRecebida.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  _frmNfeRelacaoNFeRecebida:=nil;
+  Action:=caFree;
+end;
+
+procedure T_frmNfeRelacaoNFeRecebida.DBGridConsultaGEDKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  if key = VK_F1 then
+  begin
+    begin
+      _frmNfeVisualizaDanfe:= T_frmNfeVisualizaDanfe.create(self);
+      _frmNfeVisualizaDanfe.windowstate := wsnormal;
+      _frmVisualizaCriticaNFe.bringtofront;
+      _frmNfeVisualizaDanfe.setfocus;
+    end;
+  end;
+end;
+
+procedure T_frmNfeRelacaoNFeRecebida.DBGridConsultaGEDTitleClick(
+  Column: TColumn);
+begin
+  if Column.FieldName = 'NOMP_P' then
+  begin
+    CDSConsultaGED.IndexFieldNames:='NOMP_P';
+    ConsultaGED;
+  end;
+
+  if Column.FieldName = 'ID_SITUACAO' then
+  begin
+    CDSConsultaGED.IndexFieldNames:='ID_SITUACAO';
+    ConsultaGED;
+  end;
+
+  if Column.FieldName = 'DT_ATUALIZACAO' then
+  begin
+    CDSConsultaGED.IndexFieldNames:='DT_ATUALIZACAO';
+    ConsultaGED;
+  end;
+
+  if Column.FieldName = 'DT_EMISSAO' then
+  begin
+    CDSConsultaGED.IndexFieldNames:='DT_EMISSAO';
+    ConsultaGED;
+  end;
+end;
+
+procedure T_frmNfeRelacaoNFeRecebida.SAIR1Click(Sender: TObject);
+begin
+  close;
+end;
+
+procedure T_frmNfeRelacaoNFeRecebida.DBGridConsultaGEDKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  if key = #13 then
+  begin
+      _frmNfeVisualizaDanfe:= T_frmNfeVisualizaDanfe.create(self);
+      _frmNfeVisualizaDanfe.windowstate := wsnormal;
+      _frmNfeVisualizaDanfe.bringtofront;
+      _frmNfeVisualizaDanfe.setfocus;
+  end;
+
+  if key = #27 then
+    close;
+end;
+
+procedure T_frmNfeRelacaoNFeRecebida.FormShow(Sender: TObject);
+begin
+  Timer1.Enabled:=true;
+end;
+
+procedure T_frmNfeRelacaoNFeRecebida.Timer1Timer(Sender: TObject);
+begin
+  Timer1.Enabled:=false;
+  ConsultaGED();
+end;
+
+end.

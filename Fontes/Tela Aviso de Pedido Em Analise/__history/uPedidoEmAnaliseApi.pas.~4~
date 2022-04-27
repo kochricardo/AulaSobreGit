@@ -1,0 +1,44 @@
+unit uPedidoEmAnaliseApi;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, Grids, DBGrids, StdCtrls, ComCtrls, DB, DBClient;
+
+type
+  T_frmPedidoEmAnalise = class(TForm)
+    StatusBar1: TStatusBar;
+    GroupBox1: TGroupBox;
+    GroupBox2: TGroupBox;
+    DBGrid1: TDBGrid;
+    _cdsPedidoemAnalise: TClientDataSet;
+    _dsPedidoemAnalise: TDataSource;
+    procedure FormShow(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmPedidoEmAnalise: T_frmPedidoEmAnalise;
+
+implementation
+
+{$R *.dfm}
+
+procedure T_frmPedidoEmAnalise.FormShow(Sender: TObject);
+begin
+  if _cdsPedidoemAnalise<>nil then
+  begin
+    _dsPedidoemAnalise.DataSet:=_cdsPedidoemAnalise;
+
+    _cdsPedidoemAnalise.Open
+
+  end;
+
+
+end;
+
+end.

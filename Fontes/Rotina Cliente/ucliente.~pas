@@ -1,0 +1,651 @@
+unit ucliente;
+
+
+
+interface
+
+uses SysUtils,Math,SqlExpr,DB;
+
+type
+  TCliente = class(TObject)
+    private
+    FcdCliente: Integer;
+    FidBloqueioPsicotropico: Char;
+    FidRepassaSC: Char;
+    FidStatusCliente: Char;
+    FidStatusPessoa: Char;
+    FvlSegundoPedido: Double;
+    FvlSaldoCliente: Double;
+    FvlPrimeiroPedido: Double;
+    FvlLimiteCompra: Double;
+    FpcDesconto: Double;
+    FnrCliente: Integer;
+    FnrRoteiro: Integer;
+    FnrQuantidadeCotacao: integer;
+    FnrDigitoCliente: Integer;
+    FnrCanal: Integer;
+    FnrDiasPrazoEspecial: Integer;
+    FnrTransportador: Integer;
+    FnrQuantidadepedidoDia: Integer;
+    FnrCondicao: Integer;
+    FidRepresentanteLibera: Integer;
+    FnrVendedor: Integer;
+    FnrCep: Integer;
+    FnrListaPreco: Integer;
+    FcdPrazo: Integer;
+    FnrTipoCliente: Integer;
+    FdsUnidadeFederacao: String;
+    FnmProprietario: String;
+    Fdsemail: String;
+    FnmGerente: String;
+    FdsBairro: String;
+    FdsEsmail1: String;
+    FdsIncricaoEstadual: String;
+    FdsEsmail2: String;
+    FnmRazaoSocial: String;
+    FdsMunicipio: String;
+    FnrCNPJCliente: String;
+    FdsAcordo: String;
+    FdsEndereco: String;
+    FnrFax: String;
+    FdtFundacao: TDateTime;
+    FdtPrimeiraCompra: TDateTime;
+    FdtVencimentoAlvara: TDateTime;
+    FdtBloqueio: TDateTime;
+    FidFaturaEmpresa: String;
+    FnrClassificaoCliente: Integer;
+    FpcDespesasVariaveis: Double;
+    FnrTipoEmpresa: Integer;
+    procedure SetcdCliente(const Value: Integer);
+    procedure SetcdPrazo(const Value: Integer);
+    procedure SetdsAcordo(const Value: String);
+    procedure SetdsBairro(const Value: String);
+    procedure Setdsemail(const Value: String);
+    procedure SetdsEndereco(const Value: String);
+    procedure SetdsEsmail1(const Value: String);
+    procedure SetdsEsmail2(const Value: String);
+    procedure SetdsIncricaoEstadual(const Value: String);
+    procedure SetdsMunicipio(const Value: String);
+    procedure SetdsUnidadeFederacao(const Value: String);
+    procedure SetdtBloqueio(const Value: TDateTime);
+    procedure SetdtFundacao(const Value: TDateTime);
+    procedure SetdtPrimeiraCompra(const Value: TDateTime);
+    procedure SetdtVencimentoAlvara(const Value: TDateTime);
+    procedure SetidBloqueioPsicotropico(const Value: Char);
+    procedure SetidRepassaSC(const Value: Char);
+    procedure SetidRepresentanteLibera(const Value: Integer);
+    procedure SetidStatusCliente(const Value: Char);
+    procedure SetidStatusPessoa(const Value: Char);
+    procedure SetnmGerente(const Value: String);
+    procedure SetnmProprietario(const Value: String);
+    procedure SetnmRazaoSocial(const Value: String);
+    procedure SetnrCanal(const Value: Integer);
+    procedure SetnrCep(const Value: Integer);
+    procedure SetnrCliente(const Value: Integer);
+    procedure SetnrCNPJCliente(const Value: String);
+    procedure SetnrCondicao(const Value: Integer);
+    procedure SetnrDiasPrazoEspecial(const Value: Integer);
+    procedure SetnrDigitoCliente(const Value: Integer);
+    procedure SetnrFax(const Value: String);
+    procedure SetnrListaPreco(const Value: Integer);
+    procedure SetnrQuantidadeCotacao(const Value: integer);
+    procedure SetnrQuantidadepedidoDia(const Value: Integer);
+    procedure SetnrRoteiro(const Value: Integer);
+    procedure SetnrTipoCliente(const Value: Integer);
+    procedure SetnrTransportador(const Value: Integer);
+    procedure SetnrVendedor(const Value: Integer);
+    procedure SetpcDesconto(const Value: Double);
+    procedure SetvlLimiteCompra(const Value: Double);
+    procedure SetvlPrimeiroPedido(const Value: Double);
+    procedure SetvlSaldoCliente(const Value: Double);
+    procedure SetvlSegundoPedido(const Value: Double);
+    procedure SetidFaturaEmpresa(const Value: String);
+    procedure SetnrClassificaoCliente(const Value: Integer);
+    procedure SetpcDespesasVariaveis(const Value: Double);
+    procedure SetnrTipoEmpresa(const Value: Integer);
+    public
+    property  cdCliente                        : Integer read FcdCliente write SetcdCliente;
+    property  nmRazaoSocial                    : String read FnmRazaoSocial write SetnmRazaoSocial;
+    property  dsMunicipio                      : String read FdsMunicipio write SetdsMunicipio;
+    property  dsEndereco                       : String read FdsEndereco write SetdsEndereco;
+    property  dsBairro                         : String read FdsBairro write SetdsBairro;
+    property  nrCep                            : Integer read FnrCep write SetnrCep;
+    property  nrFax                            : String read FnrFax write SetnrFax;
+    property  dsIncricaoEstadual               : String read FdsIncricaoEstadual write SetdsIncricaoEstadual;
+    property  dtVencimentoAlvara               : TDateTime read FdtVencimentoAlvara write SetdtVencimentoAlvara;
+    property  nrVendedor                       : Integer read FnrVendedor write SetnrVendedor;
+    property  cdPrazo                          : Integer read FcdPrazo write SetcdPrazo;
+    property  pcDesconto                       : Double read FpcDesconto write SetpcDesconto;
+    property  dtPrimeiraCompra                 : TDateTime read FdtPrimeiraCompra write SetdtPrimeiraCompra;
+    property  vlLimiteCompra                   : Double read FvlLimiteCompra write SetvlLimiteCompra;
+    property  vlSaldoCliente                   : Double read FvlSaldoCliente write SetvlSaldoCliente;
+    property  idStatusCliente                  : Char read FidStatusCliente write SetidStatusCliente;
+    property  nrCondicao                       : Integer read FnrCondicao write SetnrCondicao;
+    property  dsUnidadeFederacao               : String read FdsUnidadeFederacao write SetdsUnidadeFederacao;
+    property  dtFundacao                       : TDateTime read FdtFundacao write SetdtFundacao;
+    property  nrCanal                          : Integer read FnrCanal write SetnrCanal;
+    property  nrClassificaoCliente             : Integer  read FnrClassificaoCliente write SetnrClassificaoCliente;
+    property  idStatusPessoa                   : Char read FidStatusPessoa write SetidStatusPessoa;
+    property  nrTipoCliente                    : Integer read FnrTipoCliente write SetnrTipoCliente;
+    property  nrCliente                        : Integer read FnrCliente write SetnrCliente;
+    property  nrDigitoCliente                  : Integer read FnrDigitoCliente write SetnrDigitoCliente;
+    property  dsemail                          : String read Fdsemail write Setdsemail;
+    property  nrCNPJCliente                    : String read FnrCNPJCliente write SetnrCNPJCliente;
+    property  nrRoteiro                        : Integer read FnrRoteiro write SetnrRoteiro;
+    property  nrTransportador                  : Integer read FnrTransportador write SetnrTransportador;
+    property  vlPrimeiroPedido                 : Double read FvlPrimeiroPedido write SetvlPrimeiroPedido;
+    property  vlSegundoPedido                  : Double read FvlSegundoPedido write SetvlSegundoPedido;
+    property  nmProprietario                   : String read FnmProprietario write SetnmProprietario;
+    property  nmGerente                        : String read FnmGerente write SetnmGerente;
+    property  dsAcordo                         : String read FdsAcordo write SetdsAcordo;
+    property  idBloqueioPsicotropico           : Char read FidBloqueioPsicotropico write SetidBloqueioPsicotropico;
+    property  nrListaPreco                     : Integer read FnrListaPreco write SetnrListaPreco;
+    property  nrQuantidadepedidoDia            : Integer read FnrQuantidadepedidoDia write SetnrQuantidadepedidoDia;
+    property  dtBloqueio                       : TDateTime read FdtBloqueio write SetdtBloqueio;
+    property  nrQuantidadeCotacao              : integer read FnrQuantidadeCotacao write SetnrQuantidadeCotacao;
+    property  dsEsmail1                        : String read FdsEsmail1 write SetdsEsmail1;
+    property  dsEsmail2                        : String read FdsEsmail2 write SetdsEsmail2;
+    property  idRepassaSC                      : Char read FidRepassaSC write SetidRepassaSC;
+    property  nrDiasPrazoEspecial              : Integer read FnrDiasPrazoEspecial write SetnrDiasPrazoEspecial;
+    property  idRepresentanteLibera            : Integer read FidRepresentanteLibera write SetidRepresentanteLibera;
+    Property  idFaturaEmpresa                  : String read FidFaturaEmpresa write SetidFaturaEmpresa;
+    property  pcDespesasVariaveis              : Double read FpcDespesasVariaveis write SetpcDespesasVariaveis;
+    property  nrTipoEmpresa                     : Integer read FnrTipoEmpresa write SetnrTipoEmpresa;
+
+    procedure SetDadosClientes(nrCliente:Integer);
+      protected
+end;
+type
+  TClienteAtivo = class(TObject)
+  private
+    FnrCliente: Integer;
+    FcdOPeradorLogistico: Integer;
+    FvlPedidoMinimo: Double;
+    FnrPrazoMaximoPedido: Integer;
+    FidAtivo: String;
+    FcdResposavelOperador: Integer;
+    procedure SetcdOPeradorLogistico(const Value: Integer);
+    procedure SetnrCliente(const Value: Integer);
+    procedure SetidAtivo(const Value: String);
+    procedure SetnrPrazoMaximoPedido(const Value: Integer);
+    procedure SetvlPedidoMinimo(const Value: Double);
+    procedure SetcdResposavelOperador(const Value: Integer);
+    Public
+      property cdOPeradorLogistico         :Integer read FcdOPeradorLogistico write SetcdOPeradorLogistico;
+      property nrCliente                   :Integer read FnrCliente write SetnrCliente;
+      property idAtivo                     :String read FidAtivo write SetidAtivo;
+      property nrPrazoMaximoPedido        :Integer read FnrPrazoMaximoPedido write SetnrPrazoMaximoPedido;
+      property vlPedidoMinimo              :Double read FvlPedidoMinimo write SetvlPedidoMinimo;
+      property cdResposavelOperador        :Integer read FcdResposavelOperador write SetcdResposavelOperador;
+
+   protected
+end;
+
+
+  function LocalizaCliente(nrCliente,nrDigito:Integer;nrCnpj:String):Boolean;
+  function getCliente(nrCliente,nrDigito:Integer;nrCnpj:String):Tcliente;
+  Function GetClienteAtivo(cdOperadorLogistico,nrCliente:Integer):TclienteAtivo;
+
+
+implementation
+
+uses uDMCliente, DBClient;
+
+{ TCliente }
+
+procedure TCliente.SetcdCliente(const Value: Integer);
+begin
+  FcdCliente := Value;
+end;
+
+procedure TCliente.SetcdPrazo(const Value: Integer);
+begin
+  FcdPrazo := Value;
+end;
+
+procedure TCliente.SetDadosClientes(nrCliente: Integer);
+begin
+
+end;
+
+function LocalizaCliente(nrCliente,nrDigito:Integer;nrCnpj:String):Boolean;
+begin
+
+  result:=true;
+  with _dmCliente._cdsCliente do
+  begin
+    close;
+    Params[0].Clear;
+    Params[1].Clear;
+    Params[2].Clear;
+    if nrCliente>0 then
+    begin
+     Params[0].AsBCD := nrCliente;
+     Params[1].AsBCD := nrDigito;
+    end;
+    if Length(trim(nrCnpj))>1 then
+       Params[2].AsString := nrCnpj;
+    open;
+    if _dmCliente._cdsCliente.IsEmpty then
+        result:=false;
+  end;
+end;
+
+
+function GetCliente(nrCliente,nrDigito:Integer;nrCnpj:String):TCliente;
+var
+  Cliente : TCliente;
+begin
+
+  result:=nil;
+  //Cliente:=NIL;
+  with _dmCliente._cdsCliente do
+  begin
+    close;
+    Params[0].Clear;
+    Params[1].Clear;
+    Params[2].Clear;
+    if nrCliente>0 then
+    begin
+     Params[0].AsBCD := nrCliente;
+     Params[1].AsBCD := nrDigito;
+    end;
+    if Length(trim(nrCnpj))>1 then
+       Params[2].AsString := nrCnpj;
+    open;
+    if _dmCliente._cdsCliente.IsEmpty then
+    begin
+        result:=nil;
+        exit;
+    end;
+    Cliente:=TCliente.Create;
+    Cliente.cdCliente            := _dmCliente._cdsCliente.fieldByName('CODIGO').asinteger;
+    Cliente.nrCliente            := _dmCliente._cdsCliente.fieldByName('NROC_C').asinteger;
+    Cliente.nrDigitoCliente      := _dmCliente._cdsCliente.fieldByName('DIGC_C').asinteger;
+    Cliente.nrCNPJCliente        := FormatFloat('00-000-000/0000-00',_dmCliente._cdsCliente.fieldByName('CGCP_P').AsFloat);
+    Cliente.nmRazaoSocial        := _dmCliente._cdsCliente.fieldByName('NOMP_P').AsString;
+    Cliente.dsMunicipio          := _dmCliente._cdsCliente.fieldByName('MUNP_P').AsString;
+    Cliente.dsUnidadeFederacao   := _dmCliente._cdsCliente.fieldByName('UFEP_P').AsString;
+    Cliente.nrTipoCliente        := _dmCliente._cdsCliente.fieldByName('TIPC_C').AsInteger;
+    Cliente.nrCanal              := _dmCliente._cdsCliente.fieldByName('CANC_C').AsInteger;
+    Cliente.idFaturaEmpresa      := _dmCliente._cdsCliente.fieldByName('ID_FATURA_EMPRESA').AsString;
+    Cliente.nrClassificaoCliente := _dmCliente._cdsCliente.fieldByName('NCLC_C').AsInteger;
+    Cliente.nrVendedor           := _dmCliente._cdsCliente.fieldByName('NROV_C').AsInteger;
+    Cliente.dsAcordo             := _dmCliente._cdsCliente.fieldByName('ACOC_C').AsString;
+    Cliente.pcDespesasVariaveis  := _dmCliente._cdsCliente.fieldByName('PC_DESPESA_VARIAVEL').AsFloat;
+    Cliente.cdPrazo              := _dmCliente._cdsCliente.fieldByName('PRZC_C').AsInteger;
+    Cliente.nrQuantidadepedidoDia:= _dmCliente._cdsCliente.fieldByName('QPDC_C').AsInteger;
+    Cliente.vlPrimeiroPedido     := _dmCliente._cdsCliente.fieldByName('VMPC_C').AsInteger;
+    Cliente.vlSegundoPedido      := _dmCliente._cdsCliente.fieldByName('VMSC_C').AsInteger;
+    Cliente.nrTipoEmpresa        := _dmCliente._cdsCliente.fieldByName('ETEC_C').AsInteger;
+
+
+    result:=Cliente;
+
+  end;
+end;
+
+procedure TCliente.SetdsAcordo(const Value: String);
+begin
+  FdsAcordo := Value;
+end;
+
+procedure TCliente.SetdsBairro(const Value: String);
+begin
+  FdsBairro := Value;
+end;
+
+procedure TCliente.Setdsemail(const Value: String);
+begin
+  Fdsemail := Value;
+end;
+
+procedure TCliente.SetdsEndereco(const Value: String);
+begin
+  FdsEndereco := Value;
+end;
+
+procedure TCliente.SetdsEsmail1(const Value: String);
+begin
+  FdsEsmail1 := Value;
+end;
+
+procedure TCliente.SetdsEsmail2(const Value: String);
+begin
+  FdsEsmail2 := Value;
+end;
+
+procedure TCliente.SetdsIncricaoEstadual(const Value: String);
+begin
+  FdsIncricaoEstadual := Value;
+end;
+
+procedure TCliente.SetdsMunicipio(const Value: String);
+begin
+  FdsMunicipio := Value;
+end;
+
+procedure TCliente.SetdsUnidadeFederacao(const Value: String);
+begin
+  FdsUnidadeFederacao := Value;
+end;
+
+procedure TCliente.SetdtBloqueio(const Value: TDateTime);
+begin
+  FdtBloqueio := Value;
+end;
+
+procedure TCliente.SetdtFundacao(const Value: TDateTime);
+begin
+  FdtFundacao := Value;
+end;
+
+procedure TCliente.SetdtPrimeiraCompra(const Value: TDateTime);
+begin
+  FdtPrimeiraCompra := Value;
+end;
+
+procedure TCliente.SetdtVencimentoAlvara(const Value: TDateTime);
+begin
+  FdtVencimentoAlvara := Value;
+end;
+
+procedure TCliente.SetidBloqueioPsicotropico(const Value: Char);
+begin
+  FidBloqueioPsicotropico := Value;
+end;
+
+procedure TCliente.SetidFaturaEmpresa(const Value: String);
+begin
+  FidFaturaEmpresa := Value;
+end;
+
+procedure TCliente.SetidRepassaSC(const Value: Char);
+begin
+  FidRepassaSC := Value;
+end;
+
+procedure TCliente.SetidRepresentanteLibera(const Value: Integer);
+begin
+  FidRepresentanteLibera := Value;
+end;
+
+procedure TCliente.SetidStatusCliente(const Value: Char);
+begin
+  FidStatusCliente := Value;
+end;
+
+procedure TCliente.SetidStatusPessoa(const Value: Char);
+begin
+  FidStatusPessoa := Value;
+end;
+
+procedure TCliente.SetnmGerente(const Value: String);
+begin
+  FnmGerente := Value;
+end;
+
+procedure TCliente.SetnmProprietario(const Value: String);
+begin
+  FnmProprietario := Value;
+end;
+
+procedure TCliente.SetnmRazaoSocial(const Value: String);
+begin
+  FnmRazaoSocial := Value;
+end;
+
+procedure TCliente.SetnrCanal(const Value: Integer);
+begin
+  FnrCanal := Value;
+end;
+
+procedure TCliente.SetnrCep(const Value: Integer);
+begin
+  FnrCep := Value;
+end;
+
+procedure TCliente.SetnrClassificaoCliente(const Value: Integer);
+begin
+  FnrClassificaoCliente := Value;
+end;
+
+procedure TCliente.SetnrCliente(const Value: Integer);
+begin
+  FnrCliente := Value;
+end;
+
+procedure TCliente.SetnrCNPJCliente(const Value: String);
+begin
+  FnrCNPJCliente := Value;
+end;
+
+procedure TCliente.SetnrCondicao(const Value: Integer);
+begin
+  FnrCondicao := Value;
+end;
+
+procedure TCliente.SetnrDiasPrazoEspecial(const Value: Integer);
+begin
+  FnrDiasPrazoEspecial := Value;
+end;
+
+procedure TCliente.SetnrDigitoCliente(const Value: Integer);
+begin
+  FnrDigitoCliente := Value;
+end;
+
+procedure TCliente.SetnrFax(const Value: String);
+begin
+  FnrFax := Value;
+end;
+
+procedure TCliente.SetnrListaPreco(const Value: Integer);
+begin
+  FnrListaPreco := Value;
+end;
+
+procedure TCliente.SetnrQuantidadeCotacao(const Value: integer);
+begin
+  FnrQuantidadeCotacao := Value;
+end;
+
+procedure TCliente.SetnrQuantidadepedidoDia(const Value: Integer);
+begin
+  FnrQuantidadepedidoDia := Value;
+end;
+
+procedure TCliente.SetnrRoteiro(const Value: Integer);
+begin
+  FnrRoteiro := Value;
+end;
+
+procedure TCliente.SetnrTipoCliente(const Value: Integer);
+begin
+  FnrTipoCliente := Value;
+end;
+
+procedure TCliente.SetnrTipoEmpresa(const Value: Integer);
+begin
+  FnrTipoEmpresa := Value;
+end;
+
+procedure TCliente.SetnrTransportador(const Value: Integer);
+begin
+  FnrTransportador := Value;
+end;
+
+procedure TCliente.SetnrVendedor(const Value: Integer);
+begin
+  FnrVendedor := Value;
+end;
+
+procedure TCliente.SetpcDesconto(const Value: Double);
+begin
+  FpcDesconto := Value;
+end;
+
+procedure TCliente.SetpcDespesasVariaveis(const Value: Double);
+begin
+  FpcDespesasVariaveis := Value;
+end;
+
+procedure TCliente.SetvlLimiteCompra(const Value: Double);
+begin
+  FvlLimiteCompra := Value;
+end;
+
+procedure TCliente.SetvlPrimeiroPedido(const Value: Double);
+begin
+  FvlPrimeiroPedido := Value;
+end;
+
+procedure TCliente.SetvlSaldoCliente(const Value: Double);
+begin
+  FvlSaldoCliente := Value;
+end;
+
+procedure TCliente.SetvlSegundoPedido(const Value: Double);
+begin
+  FvlSegundoPedido := Value;
+end;
+
+
+
+
+
+{Function ClienteAtivo(cdOperadorLogistico,nrCliente:Integer):Boolean;
+VAR
+  ST_PARAMETRO_ENTRADA :sTRING;
+  ST_PARAMETRO_SAIDA   :sTRING;
+  vl_temp              :String;
+begin
+  if conectado then
+   begin
+    try
+     ST_PARAMETRO_ENTRADA:='1'+STRZERO(TPPP_logistico,6)+'1'+STRZERO(NROC_IP,15);
+     DM_Cliente.SP_CLIENTE_ATIVO_NOVA.Close;
+     DM_Cliente.SP_CLIENTE_ATIVO_NOVA.ParamByname('ENTRADA_IN').ASSTRING:=ST_PARAMETRO_ENTRADA;
+     DM_Cliente.SP_CLIENTE_ATIVO_NOVA.Prepared:=FALSE;
+     DM_Cliente.SP_CLIENTE_ATIVO_NOVA.Close;
+     DM_Cliente.SP_CLIENTE_ATIVO_NOVA.ExecProc;
+     ERRO_OP := DM_Cliente.SP_CLIENTE_ATIVO_NOVA.ParamByname('erro_ou').value;
+     IF ERRO_OP=0 then
+     begin
+       ST_PARAMETRO_SAIDA  :=DM_Cliente.SP_CLIENTE_ATIVO_NOVA.ParamByname('SAIDA_OU').Value;
+        Cliente_Ativo      :=copy(ST_PARAMETRO_SAIDA,1,1);
+        CD_REP_OPERADOR    :=inttostr(strtoint(copy(ST_PARAMETRO_SAIDA,25,10)));
+        PRAZO_MAXIMO_PEDIDO:= strtoint(copy(ST_PARAMETRO_SAIDA,09,03));
+        Prazo_Max          := PRAZO_MAXIMO_PEDIDO;
+     end;
+     IF (TPPP_logistico>1) and (id_pedido_ol) THEN
+     begin
+        PRAZO_MAXIMO_PEDIDO:= strtoint(copy(ST_PARAMETRO_SAIDA,09,03));
+        Prazo_Max          := PRAZO_MAXIMO_PEDIDO;
+        vl_temp            := copy(ST_PARAMETRO_SAIDA,12,13);
+        VL_MINIMO_PEDIDO   := strtofloat(vl_temp)/100;
+        Vlr_ped_Min        := VL_MINIMO_PEDIDO;
+        if ID_DPMP_P=0  then  ID_DPMP_P:= Data_sistema + Prazo_cliente;
+         //Cliente_operador(NR_CLIENTE,inttostr(TPPP_logistico));
+     end;
+     IF PRAZO_MAXIMO_PEDIDO>100 THEN
+     BEGIN
+         Mensagem('Problena no retorno do Prazo Máximo do Cliente...'+#13+
+                  'Avise a coodernação'+#13+
+                  ' Operador ='+ STRZERO(TPPP_logistico,6)+#13+
+                  ' Prazao Maximo =' +copy(ST_PARAMETRO_SAIDA,09,03));
+         PRAZO_MAXIMO_PEDIDO:=35;
+     END;
+     if  Cliente_Ativo='I' then
+     begin
+      Mensagem('Cliente  não está Ativo Para Este OPerador Logistico!!!'+#13+
+               ' Código Cliente - ' +CD_CLIENTE + ' - '
+               + Razao_cliente +#13 +
+               ' Não pode fazer Pedido se não estiver Ativo!!!'+#13+
+               '***************************************************'+#13+
+               '***************************************************'+#13+
+               '***** Obs : Se Necessário Cadastrar, Falar com ***'+#13+
+               '****Sr. Daniel Oliveira Dpto. Operação Logistica *'+#13+
+               '***************************************************');
+      exit;
+      ST_BLOQUEIO_log := ST_BLOQUEIO_log +' - '+'CLIENTE INATIVO  ='+'S'
+
+     end;
+
+    except
+     begin
+      EnviaErroaoSuporte('ricardo@gam.com.br', ' ','to aqui DM_Cliente.SP_OL_CLIENTE_ATIVO.ExecProc erro para o cliente'+NR_CLIENTE);
+      mensagem('Erro Na Rotina que verifica se cliente Está Ativos !!!'+#13+
+               'Comunicar Desenvolvimento');
+     end;
+    end;
+ end;
+end;}
+
+
+{ TClienteAtivo }
+
+Function GetClienteAtivo(cdOperadorLogistico,nrCliente:Integer):TclienteAtivo;
+var
+  ClienteAtivo : TClienteAtivo;
+  erro         : double;
+  stParamentoEntrada,
+  stParamentoSaida   :String;
+
+begin
+    result:=nil;
+    try
+      stParamentoEntrada:='1'+FormatFloat('000000',cdOperadorLogistico)+'1'+FormatFloat('000000000000000',nrCliente);
+      _dmCliente._spClienteAtivo.Close;
+      _dmCliente._spClienteAtivo.ParamByName('ENTRADA_IN').AsString:=stParamentoEntrada;
+      _dmCliente._spClienteAtivo.Close;
+      _dmCliente._spClienteAtivo.Prepared:=false;
+      _dmCliente._spClienteAtivo.ExecProc;
+       erro :=_dmCliente._spClienteAtivo.ParamByName('ERRO_OU').Value;
+       if erro=0 then
+       begin
+         ClienteAtivo:=TClienteAtivo.Create;
+         stParamentoSaida                :=_dmCliente._spClienteAtivo.ParamByName('SAIDA_OU').AsString;
+         ClienteAtivo.idAtivo            := copy(stParamentoSaida,1,1);
+         ClienteAtivo.nrPrazoMaximoPedido:=StrToIntDef(copy(stParamentoSaida,09,03),0);
+         ClienteAtivo.vlPedidoMinimo     := StrToFloatDef(copy(stParamentoSaida,12,13),0)/100;
+         result:=ClienteAtivo;
+       end;
+    EXCEPT
+        result:=nil;
+        exit;
+    end;
+
+end;
+
+procedure TClienteAtivo.SetcdOPeradorLogistico(const Value: Integer);
+begin
+  FcdOPeradorLogistico := Value;
+end;
+
+procedure TClienteAtivo.SetcdResposavelOperador(const Value: Integer);
+begin
+  FcdResposavelOperador := Value;
+end;
+
+procedure TClienteAtivo.SetidAtivo(const Value: String);
+begin
+  FidAtivo := Value;
+end;
+
+procedure TClienteAtivo.SetnrCliente(const Value: Integer);
+begin
+  FnrCliente := Value;
+end;
+
+procedure TClienteAtivo.SetnrPrazoMaximoPedido(const Value: Integer);
+begin
+  FnrPrazoMaximoPedido := Value;
+end;
+
+procedure TClienteAtivo.SetvlPedidoMinimo(const Value: Double);
+begin
+  FvlPedidoMinimo := Value;
+end;
+
+end.

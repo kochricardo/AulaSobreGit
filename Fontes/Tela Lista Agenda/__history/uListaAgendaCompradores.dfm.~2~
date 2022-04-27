@@ -1,0 +1,93 @@
+object _frmListaAgendaCompradores: T_frmListaAgendaCompradores
+  Left = 0
+  Top = 0
+  Caption = 'Lista Laboratorio Compradores'
+  ClientHeight = 441
+  ClientWidth = 748
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object _gbFiltroLista: TGroupBox
+    Left = 0
+    Top = 0
+    Width = 748
+    Height = 105
+    Align = alTop
+    Caption = 'Filtro Lista'
+    TabOrder = 0
+    ExplicitLeft = 328
+    ExplicitTop = 96
+    ExplicitWidth = 185
+    object _lbeComprador: TLabeledEdit
+      Left = 26
+      Top = 28
+      Width = 75
+      Height = 19
+      Ctl3D = False
+      EditLabel.Width = 53
+      EditLabel.Height = 13
+      EditLabel.Caption = 'Comprador'
+      ParentCtl3D = False
+      TabOrder = 0
+    end
+    object _btnMostraPedidos: TBitBtn
+      Left = 277
+      Top = 51
+      Width = 155
+      Height = 25
+      Caption = ' Lista Agenda Comprador'
+      DoubleBuffered = True
+      Glyph.Data = {
+        F6000000424DF600000000000000760000002800000010000000100000000100
+        0400000000008000000000000000000000001000000000000000000000000000
+        8000008000000080800080000000800080008080000080808000C0C0C0000000
+        FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+        8888888888888888888800000888880000080F000888880F00080F000888880F
+        0008000000080000000800F000000F00000800F000800F00000800F000800F00
+        00088000000000000088880F00080F0008888800000800000888888000888000
+        88888880F08880F0888888800088800088888888888888888888}
+      ParentDoubleBuffered = False
+      TabOrder = 1
+    end
+  end
+  object GroupBox1: TGroupBox
+    Left = 0
+    Top = 105
+    Width = 748
+    Height = 264
+    Align = alTop
+    Caption = 'Lista de Agenda Compradores'
+    TabOrder = 1
+    object DBGrid1: TDBGrid
+      Left = 2
+      Top = 15
+      Width = 744
+      Height = 247
+      Align = alClient
+      DataSource = _dsListaFornecedores
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+    end
+  end
+  object _cdsListaFornecedores: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 552
+    Top = 112
+  end
+  object _dsListaFornecedores: TDataSource
+    DataSet = _cdsListaFornecedores
+    Left = 640
+    Top = 112
+  end
+end

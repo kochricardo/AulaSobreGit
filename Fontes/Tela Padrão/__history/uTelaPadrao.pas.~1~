@@ -1,0 +1,30 @@
+unit uTelaPadrao;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, DB, DBClient, Grids, DBGrids, StdCtrls, ComCtrls;
+
+type
+  T_frmPadrao = class(TForm)
+    StatusBar1: TStatusBar;
+    GroupBox1: TGroupBox;
+    GroupBox2: TGroupBox;
+    DBGrid1: TDBGrid;
+    ClientDataSet1: TClientDataSet;
+    DataSource1: TDataSource;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmPadrao: T_frmPadrao;
+
+implementation
+
+{$R *.dfm}
+
+end.

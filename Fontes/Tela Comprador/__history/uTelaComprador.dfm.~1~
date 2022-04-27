@@ -1,0 +1,59 @@
+object _frmCompradorDisponivel: T_frmCompradorDisponivel
+  Left = 0
+  Top = 0
+  Caption = 'Comprador disponiveis'
+  ClientHeight = 318
+  ClientWidth = 400
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Comprador: TGroupBox
+    Left = 0
+    Top = 0
+    Width = 400
+    Height = 241
+    Align = alTop
+    Caption = 'Comprador'
+    TabOrder = 0
+    object DBGrid1: TDBGrid
+      Left = 2
+      Top = 15
+      Width = 396
+      Height = 224
+      Align = alClient
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+    end
+  end
+  object StatusBar1: TStatusBar
+    Left = 0
+    Top = 299
+    Width = 400
+    Height = 19
+    Panels = <>
+    ExplicitLeft = 288
+    ExplicitTop = 264
+    ExplicitWidth = 0
+  end
+  object _cdsComprador: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 72
+    Top = 48
+  end
+  object _dsComprador: TDataSource
+    DataSet = _cdsComprador
+    Left = 176
+    Top = 48
+  end
+end

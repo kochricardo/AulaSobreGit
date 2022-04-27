@@ -1,0 +1,665 @@
+unit uExcessoProduto;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, DB, DBClient, Grids, DBGrids, Buttons, uAuxiliarCompras,
+  uRotinasGenericas,SqlExpr;
+
+type
+  T_frmRelatoriodeExcesso = class(TForm)
+    GroupBox1: TGroupBox;
+    _dbgExcesso: TDBGrid;
+    _cdsExcesso: TClientDataSet;
+    _dsExcesso: TDataSource;
+    GroupBox2: TGroupBox;
+    _edtNrdiasExcesso: TEdit;
+    Label1: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    _edtCodProduto: TEdit;
+    _edtNrFornecedor: TEdit;
+    _edtNrComprador: TEdit;
+    _btnExecuta: TBitBtn;
+    _bitFechar: TBitBtn;
+    _btnParaExcel: TBitBtn;
+    _edtValordoExcessoCusto: TEdit;
+    _cdsExcessoVT_EXCESSO_FINANCEIRO: TAggregateField;
+    Label2: TLabel;
+    _edtValorExcessoPcoCompra: TEdit;
+    Label3: TLabel;
+    _edtValorExcessoPcoVda: TEdit;
+    Label7: TLabel;
+    _cdsExcessoVT_EXCESSO_VENDA: TAggregateField;
+    _cdsExcessoVT_EXCESSO_COMPRA: TAggregateField;
+    Label18: TLabel;
+    _cbxOpcaoCDs: TComboBox;
+    _cdsExcessoNR_UNID_ACIMA_PARAMETRO: TAggregateField;
+    _edtNrUnidadesExcesso: TEdit;
+    Label8: TLabel;
+    procedure _btnExecutaClick(Sender: TObject);
+    procedure _bitFecharClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
+    procedure _dbgExcessoTitleClick(Column: TColumn);
+    procedure _dbgExcessoDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure _btnParaExcelClick(Sender: TObject);
+    procedure _edtNrdiasExcessoKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure FormShow(Sender: TObject);
+  private
+    procedure SetGridExcesso;
+    function GeraTabelaExecesso(nrDiasExcesso, cdProduto, nrFornecedor,
+      nrComprador,PnrCD: Integer): Boolean;
+    procedure executaPesquisa;
+    procedure CarregaEmpresa;
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmRelatoriodeExcesso: T_frmRelatoriodeExcesso;
+
+implementation
+
+uses uDm;
+
+{$R *.dfm}
+
+procedure T_frmRelatoriodeExcesso.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+ Action:=cafree;
+end;
+
+procedure T_frmRelatoriodeExcesso.FormCreate(Sender: TObject);
+begin
+  _edtNrComprador.Text:=IntToStr(nrCompradorSistema);
+end;
+
+procedure T_frmRelatoriodeExcesso.FormShow(Sender: TObject);
+begin
+ CarregaEmpresa;
+end;
+
+procedure T_frmRelatoriodeExcesso._bitFecharClick(Sender: TObject);
+begin
+ close;
+end;
+
+procedure T_frmRelatoriodeExcesso._btnExecutaClick(Sender: TObject);
+begin
+  executaPesquisa;
+end;
+
+procedure T_frmRelatoriodeExcesso._btnParaExcelClick(Sender: TObject);
+begin
+
+Screen.Cursor := crSQLWait;
+_btnParaExcel.enabled:=false;
+if not _cdsExcesso.IsEmpty then
+     GerarExcel(_cdsExcesso);
+Screen.Cursor := crDefault;
+Mensagem('Planilha Gerada',64);
+_btnParaExcel.enabled:=true;
+
+end;
+
+procedure T_frmRelatoriodeExcesso._dbgExcessoDrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
+begin
+   with _dbgExcesso do
+   begin
+
+// mude a cor das Linha
+   If odd(_cdsExcesso.RecNo) then
+   begin
+      Canvas.Font.Color := clblack;
+     Canvas.Brush.Color := clSkyBlue;
+   end
+  else
+  begin
+    Canvas.Font.Color := clblack;
+    Canvas.Brush.Color := clWhite;
+  end;
+  // mude a cor de celulas selecionadas
+      if(gdSelected in State) then
+      begin
+         Canvas.brush.Color:= clblue;
+         Canvas.Font.Color:= clWhite;
+      end;
+// mude a cor das celulas com foco
+      if(gdfocused in State) then
+      begin
+         Canvas.brush.Color:= clBlue;
+         Canvas.Font.Color:= clwhite;
+      end;
+      DefaultDrawColumnCell(Rect,DataCol,Column,state);
+   end;
+end;
+
+procedure T_frmRelatoriodeExcesso._dbgExcessoTitleClick(Column: TColumn);
+begin
+  GeraOrdenacao(_cdsExcesso,Column);
+end;
+
+procedure T_frmRelatoriodeExcesso._edtNrdiasExcessoKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+    case key of
+     VK_RETURN :executaPesquisa;
+    end;
+
+end;
+
+procedure T_frmRelatoriodeExcesso.SetGridExcesso;
+begin
+  TIntegerField(_cdsExcesso.FieldByName('CD_COMPRADOR')).DisplayLabel:='Comprador';
+  TIntegerField(_cdsExcesso.FieldByName('CD_COMPRADOR')).DisplayWidth:=5;
+
+  TStringField(_cdsExcesso.FieldByName('NM_COMPRADOR_REDUZIDO')).DisplayLabel:='Nome';
+  TStringField(_cdsExcesso.FieldByName('NM_COMPRADOR_REDUZIDO')).DisplayWidth:=13;
+
+  TIntegerField(_cdsExcesso.FieldByName('CD_PRODUTO')).DisplayLabel:='Cod.Prod';
+  TIntegerField(_cdsExcesso.FieldByName('CD_PRODUTO')).DisplayWidth:=7;
+
+  TStringField(_cdsExcesso.FieldByName('NM_MERCADORIA')).DisplayLabel:='Nome Produto';
+  TStringField(_cdsExcesso.FieldByName('NM_MERCADORIA')).DisplayWidth:=20;
+
+  TStringField(_cdsExcesso.FieldByName('DS_APRESENTACAO_MERCADORIA')).DisplayLabel:='Apresentação';
+  TStringField(_cdsExcesso.FieldByName('DS_APRESENTACAO_MERCADORIA')).DisplayWidth:=20;
+
+  TStringField(_cdsExcesso.FieldByName('ID_CD')).DisplayLabel:='CD';
+  TStringField(_cdsExcesso.FieldByName('ID_CD')).DisplayWidth:=15;
+
+  TIntegerField(_cdsExcesso.FieldByName('CD_GRUPO_FORNECEDOR')).DisplayLabel:='Nr.Fornec.';
+  TIntegerField(_cdsExcesso.FieldByName('CD_GRUPO_FORNECEDOR')).DisplayWidth:=5;
+
+  TStringField(_cdsExcesso.FieldByName('DS_GRUPO_FORNECEDOR')).DisplayLabel:='Nome Fornec.';
+  TStringField(_cdsExcesso.FieldByName('DS_GRUPO_FORNECEDOR')).DisplayWidth:=20;
+
+  TStringField(_cdsExcesso.FieldByName('TIPO')).DisplayLabel:='Tipo Prod.';
+  TStringField(_cdsExcesso.FieldByName('TIPO')).DisplayWidth:=05;
+
+  TStringField(_cdsExcesso.FieldByName('ID_CURVA_MERCADORIA')).DisplayLabel:='Curva';
+  TStringField(_cdsExcesso.FieldByName('ID_CURVA_MERCADORIA')).DisplayWidth:=03;
+
+  TIntegerField(_cdsExcesso.FieldByName('ESTOQUE_FISICO')).DisplayLabel:='Estoque';
+  TIntegerField(_cdsExcesso.FieldByName('ESTOQUE_FISICO')).DisplayWidth:=8;
+  TIntegerField(_cdsExcesso.FieldByName('ESTOQUE_FISICO')).DisplayFormat:='###,###,##0';
+
+  TIntegerField(_cdsExcesso.FieldByName('UNID_VENDIDA')).DisplayLabel:='Qtd. Faturada';
+  TIntegerField(_cdsExcesso.FieldByName('UNID_VENDIDA')).DisplayWidth:=8;
+  TIntegerField(_cdsExcesso.FieldByName('UNID_VENDIDA')).DisplayFormat:='###,###,##0';
+
+//  TIntegerField(_cdsExcesso.FieldByName('NR_DIAS_VENDA')).DisplayLabel:='Dias Vda.';
+//  TIntegerField(_cdsExcesso.FieldByName('NR_DIAS_VENDA')).DisplayWidth:=5;
+//  TIntegerField(_cdsExcesso.FieldByName('NR_DIAS_VENDA')).DisplayFormat:='###,##0';
+
+  TIntegerField(_cdsExcesso.FieldByName('QT_DIAS_ESTOQUE_ZERO')).DisplayLabel:='Nr.Dias c/Estq 0';
+  TIntegerField(_cdsExcesso.FieldByName('QT_DIAS_ESTOQUE_ZERO')).DisplayWidth:=5;
+  TIntegerField(_cdsExcesso.FieldByName('QT_DIAS_ESTOQUE_ZERO')).DisplayFormat:='###,##0';
+
+  TIntegerField(_cdsExcesso.FieldByName('NR_PERIODO')).DisplayLabel:='Nr.Meses';
+  TIntegerField(_cdsExcesso.FieldByName('NR_PERIODO')).DisplayWidth:=5;
+  TIntegerField(_cdsExcesso.FieldByName('NR_PERIODO')).DisplayFormat:='###,##0';
+
+{  TFloatField(_cdsExcesso.FieldByName('MEDIA_SIS')).DisplayLabel:='Media da Base';
+  TFloatField(_cdsExcesso.FieldByName('MEDIA_SIS')).DisplayWidth:=5;
+  TFloatField(_cdsExcesso.FieldByName('MEDIA_SIS')).DisplayFormat:='###,##0.00';
+ }
+//  TFloatField(_cdsExcesso.FieldByName('MEDIA_CALC')).DisplayLabel:='Media da Calc.';
+//  TFloatField(_cdsExcesso.FieldByName('MEDIA_CALC')).DisplayWidth:=5;
+//  TFloatField(_cdsExcesso.FieldByName('MEDIA_CALC')).DisplayFormat:='###,##0.00';
+
+  TFloatField(_cdsExcesso.FieldByName('MEDIA_DIA')).DisplayLabel:='Media Dia';
+  TFloatField(_cdsExcesso.FieldByName('MEDIA_DIA')).DisplayWidth:=5;
+  TFloatField(_cdsExcesso.FieldByName('MEDIA_DIA')).DisplayFormat:='###,##0.00';
+
+  TFloatField(_cdsExcesso.FieldByName('MEDIA_MENSAL')).DisplayLabel:='Media Mensal';
+  TFloatField(_cdsExcesso.FieldByName('MEDIA_MENSAL')).DisplayWidth:=5;
+  TFloatField(_cdsExcesso.FieldByName('MEDIA_MENSAL')).DisplayFormat:='###,##0.00';
+
+  TIntegerField(_cdsExcesso.FieldByName('NR_DIAS')).DisplayLabel:='Nr.Dias';
+  TIntegerField(_cdsExcesso.FieldByName('NR_DIAS')).DisplayWidth:=5;
+  TIntegerField(_cdsExcesso.FieldByName('NR_DIAS')).DisplayFormat:='###,##0';
+
+  TIntegerField(_cdsExcesso.FieldByName('QT_DIAS_VENDA')).DisplayLabel:='Nr.Dias Vda.';
+  TIntegerField(_cdsExcesso.FieldByName('QT_DIAS_VENDA')).DisplayWidth:=5;
+  TIntegerField(_cdsExcesso.FieldByName('QT_DIAS_VENDA')).DisplayFormat:='###,##0';
+
+  TIntegerField(_cdsExcesso.FieldByName('QT_DIAS_VENDA')).DisplayLabel:='Nr.Dias Vda.';
+  TIntegerField(_cdsExcesso.FieldByName('QT_DIAS_VENDA')).DisplayWidth:=5;
+  TIntegerField(_cdsExcesso.FieldByName('QT_DIAS_VENDA')).DisplayFormat:='###,##0';
+
+  TIntegerField(_cdsExcesso.FieldByName('QT_ESTOQUE_MAXIMO')).DisplayLabel:='Dias Estq.Max.';
+  TIntegerField(_cdsExcesso.FieldByName('QT_ESTOQUE_MAXIMO')).DisplayWidth:=5;
+  TIntegerField(_cdsExcesso.FieldByName('QT_ESTOQUE_MAXIMO')).DisplayFormat:='###,##0';
+
+  TIntegerField(_cdsExcesso.FieldByName('QT_ESTOQUE_MINIMO')).DisplayLabel:='Dias Estq.Min.';
+  TIntegerField(_cdsExcesso.FieldByName('QT_ESTOQUE_MINIMO')).DisplayWidth:=5;
+  TIntegerField(_cdsExcesso.FieldByName('QT_ESTOQUE_MINIMO')).DisplayFormat:='###,##0';
+
+
+  TIntegerField(_cdsExcesso.FieldByName('NR_DIAS_EXCESSO')).DisplayLabel:='Dias Excesso';
+  TIntegerField(_cdsExcesso.FieldByName('NR_DIAS_EXCESSO')).DisplayWidth:=5;
+  TIntegerField(_cdsExcesso.FieldByName('NR_DIAS_EXCESSO')).DisplayFormat:='###,##0';
+
+  TIntegerField(_cdsExcesso.FieldByName('NR_UNID_EXCESSO')).DisplayLabel:='Nr.Unid. Excesso';
+  TIntegerField(_cdsExcesso.FieldByName('NR_UNID_EXCESSO')).DisplayWidth:=5;
+  TIntegerField(_cdsExcesso.FieldByName('NR_UNID_EXCESSO')).DisplayFormat:='###,###,##0';
+
+  TFloatField(_cdsExcesso.FieldByName('VL_CUSTO')).DisplayLabel:='Vlr.Unit.Custo';
+  TFloatField(_cdsExcesso.FieldByName('VL_CUSTO')).DisplayWidth:=09;
+  TFloatField(_cdsExcesso.FieldByName('VL_CUSTO')).DisplayFormat:='###,##0.00';
+
+  TFloatField(_cdsExcesso.FieldByName('VL_PRECO_COMPRA')).DisplayLabel:='Vlr.Unit.Compra';
+  TFloatField(_cdsExcesso.FieldByName('VL_PRECO_COMPRA')).DisplayWidth:=09;
+  TFloatField(_cdsExcesso.FieldByName('VL_PRECO_COMPRA')).DisplayFormat:='###,##0.00';
+
+  TFloatField(_cdsExcesso.FieldByName('VL_PRECO_VENDA')).DisplayLabel:='Vlr.Unit.Vda';
+  TFloatField(_cdsExcesso.FieldByName('VL_PRECO_VENDA')).DisplayWidth:=09;
+  TFloatField(_cdsExcesso.FieldByName('VL_PRECO_VENDA')).DisplayFormat:='###,##0.00';
+
+  TFloatField(_cdsExcesso.FieldByName('VL_EXCESSO_FINANCEIRO')).DisplayLabel:='Vlr.Excesso.Pco.Custo';
+  TFloatField(_cdsExcesso.FieldByName('VL_EXCESSO_FINANCEIRO')).DisplayWidth:=12;
+  TFloatField(_cdsExcesso.FieldByName('VL_EXCESSO_FINANCEIRO')).DisplayFormat:='###,##0.00';
+
+  TFloatField(_cdsExcesso.FieldByName('VL_EXCESSO_COMPRA')).DisplayLabel:='Vlr.Excesso.Pco.Compra';
+  TFloatField(_cdsExcesso.FieldByName('VL_EXCESSO_COMPRA')).DisplayWidth:=12;
+  TFloatField(_cdsExcesso.FieldByName('VL_EXCESSO_COMPRA')).DisplayFormat:='###,##0.00';
+
+  TFloatField(_cdsExcesso.FieldByName('VL_EXCESSO_VENDA')).DisplayLabel:='Vlr.Excesso.Pco.Vda';
+  TFloatField(_cdsExcesso.FieldByName('VL_EXCESSO_VENDA')).DisplayWidth:=12;
+  TFloatField(_cdsExcesso.FieldByName('VL_EXCESSO_VENDA')).DisplayFormat:='###,##0.00';
+end;
+
+Function T_frmRelatoriodeExcesso.GeraTabelaExecesso(nrDiasExcesso,cdProduto,nrFornecedor,nrComprador,PnrCD:Integer):Boolean;
+var
+ stQuery :TStringList;
+ _cdsTemp:TClientDataSet;
+begin
+ try
+   stQuery:=TStringList.Create;
+   _cdsTemp := TClientDataSet.Create(nil);
+   _cdsTemp.RemoteServer := _dm._LocalConexao;
+   _cdsTemp.ProviderName := '_dspGenerica';
+   with stQuery do
+   begin
+
+    add('   SELECT ');
+    add('  CD_PRODUTO,');
+    add('  NM_MERCADORIA,DS_APRESENTACAO_MERCADORIA,');
+    add('  ID_CD,');
+    add('  CD_GRUPO_FORNECEDOR,');
+    add('  DS_GRUPO_FORNECEDOR,');
+    add('  TIPO,');
+    add('  ID_CURVA_MERCADORIA,');
+    add('  ESTOQUE_FISICO,');
+    add('  UNID_VENDIDA,');
+    add('  QT_DIAS_ESTOQUE_ZERO,');
+    add('  NR_PERIODO,');
+    add('  NR_DIAS,');
+    add('  QT_DIAS_VENDA,');
+    add('  MEDIA_DIA,');
+    add('  MEDIA_DIA*30 AS MEDIA_MENSAL,');
+    add('  QT_DIAS_LEADTIME_FABRICANTE LEAD_TIME,');
+    add('  QT_ESTOQUE_MAXIMO,');
+    add('  QT_ESTOQUE_MINIMO,');
+    add('  CASE');
+    add('   WHEN ESTOQUE_FISICO>0 THEN ROUND((ESTOQUE_FISICO/MEDIA_DIA)-:PnrDiasExcesso ,0)');
+    add('   ELSE 0');
+    add('   END  NR_DIAS_EXCESSO,');
+    add('  CASE');
+    add('   WHEN ESTOQUE_FISICO>0 THEN  ROUND((ESTOQUE_FISICO/MEDIA_DIA)-:PnrDiasExcesso ,0)*MEDIA_DIA');
+    add('   ELSE 0');
+    add('   END  NR_UNID_EXCESSO,');
+    add('  VL_CUSTO,');
+    add('  VL_PRECO_COMPRA,');
+    add('  VL_PRECO_VENDA,');
+    add('');
+    add('  CASE');
+    add('   WHEN ESTOQUE_FISICO>0 THEN  ROUND((ROUND((ESTOQUE_FISICO/MEDIA_DIA)-:PnrDiasExcesso,0)*MEDIA_DIA),0)*VL_CUSTO');
+    add('   ELSE 0');
+    add('   END VL_EXCESSO_FINANCEIRO,');
+    add('  CASE');
+    add('   WHEN ESTOQUE_FISICO>0 THEN ROUND((ROUND((ESTOQUE_FISICO/MEDIA_DIA)-:PnrDiasExcesso,0)*MEDIA_DIA),0)*VL_PRECO_COMPRA');
+    add('   ELSE 0');
+    add('   END  VL_EXCESSO_COMPRA,');
+    add('  CASE');
+    add('   WHEN ESTOQUE_FISICO>0 THEN ROUND((ROUND((ESTOQUE_FISICO/MEDIA_DIA)-:PnrDiasExcesso,0)*MEDIA_DIA),0)*VL_PRECO_VENDA');
+    add('   ELSE 0');
+    add('   END VL_EXCESSO_VENDA,');
+    add('  CD_COMPRADOR,');
+    add('  NM_COMPRADOR_REDUZIDO,');
+    add('  CD_EMPRESA');
+    add('  FROM');
+    add('');
+    add('');
+    add('  (SELECT');
+    add('  MERCADORIA.CD_MERCADORIA*10+ NR_DV_MERCADORIA AS CD_PRODUTO,');
+    add('  NM_MERCADORIA,DS_APRESENTACAO_MERCADORIA,');
+    add('  CD_COMPRADOR,');
+    add('  NM_COMPRADOR_REDUZIDO,');
+    add('  (SELECT NM_EMPRESA FROM ACESSO.DC_EMPRESA Emp WHERE emp.CD_EMPRESA=ESTOQUE.CD_EMPRESA) AS  ID_CD,');
+    add('  GRUPO_FORNECEDOR.CD_GRUPO_FORNECEDOR, DS_GRUPO_FORNECEDOR,');
+    add('  DECODE(DS_NIVEL_ECNM,1,''MED'',2,''PERF'',''OUTR'') TIPO,');
+    add('  COMPRA.ID_CURVA_MERCADORIA,');
+    add('  (QT_FISICO -QT_RESERVADO-QT_RESERVA_PROBLEMATICA-QT_VENCIDO) ESTOQUE_FISICO,');
+    add('  NVL(QT_VENDIDA,0) AS UNID_VENDIDA,');
+    add('  NVL(QT_DIAS_ESTOQUE_ZERO,0) AS QT_DIAS_ESTOQUE_ZERO,');
+    add('  1 AS NR_PERIODO,');
+    add('  NVL(NR_DIAS,0) AS NR_DIAS,');
+    add('  QT_DIAS_VENDA AS QT_DIAS_VENDA,');
+    add('  QT_MEDIA_VENDA_DIARIA MEDIA_DIA,');
+    add('  QT_DIAS_LEADTIME_FABRICANTE,');
+    add('  (QT_ESTOQUE_MAXIMO+QT_DIAS_LEADTIME_FABRICANTE) as QT_ESTOQUE_MAXIMO,');
+    add('  QT_ESTOQUE_MINIMO,');
+    add('  CASE');
+    add('   WHEN QT_FISICO>0 THEN ROUND(VT_CUSTO_FINANCEIRO_MERCADORIA/QT_FISICO,2)');
+    add('  ELSE 0');
+    add('  END VL_CUSTO,');
+    add('  VL_PRECO_COMPRA,');
+    add('  VL_PRECO_VENDA,');
+    add('  ESTOQUE.CD_EMPRESA');
+    add('  FROM');
+    add('  PRDDM.DC_MERCADORIA MERCADORIA');
+    add('');
+    add('  JOIN PRDDM.DC_ESTOQUE_MERCADORIA ESTOQUE ON ESTOQUE.CD_MERCADORIA=MERCADORIA.CD_MERCADORIA AND ESTOQUE.ID_SITUACAO_MERCADORIA<>''I''');
+    add('  AND ESTOQUE.ID_SITUACAO_MERCADORIA=MERCADORIA.ID_SITUACAO_MERCADORIA');
+    add('  JOIN acesso.dc_empresa emp ON emp.cd_empresa=estoque.cd_empresa AND id_empresa_fisica=''S''');
+    add('  LEFT OUTER JOIN PRDDM.DC_COMPRA_MERCADORIA COMPRA ON COMPRA.CD_EMPRESA=ESTOQUE.CD_EMPRESA AND COMPRA.CD_MERCADORIA=ESTOQUE.CD_MERCADORIA AND Round(SYSDATE-DT_PRIMEIRA_COMPRA,0)>=90');
+    add('  LEFT OUTER JOIN PRDDM.DC_FINANCEIRO_MERCADORIA FINANCEIRO ON COMPRA.CD_EMPRESA=FINANCEIRO.CD_EMPRESA AND COMPRA.CD_MERCADORIA=FINANCEIRO.CD_MERCADORIA');
+    add('  LEFT OUTER JOIN PRDDM.DC_GRUPO_FORNECEDOR GRUPO_FORNECEDOR ON  GRUPO_FORNECEDOR.CD_GRUPO_FORNECEDOR=COMPRA.CD_GRUPO_FORNECEDOR');
+    add('  LEFT OUTER JOIN PRDDM.DC_COMPRADOR_GAM COMPRADOR   ON COMPRADOR.CD_EMPRESA=1 AND COMPRADOR.NR_COMPRADOR=COMPRA.CD_COMPRADOR');
+    add('  LEFT OUTER JOIN PRDDM.DC_GRUPO_FABRICANTE_MERCADORIA CURVA_GRUPO ON CURVA_GRUPO.CD_GRUPO_CURVA_FABRICANTE=GRUPO_FORNECEDOR.CD_GRUPO_CURVA_FABRICANTE');
+    add('  AND CURVA_GRUPO.ID_CURVA_MERCADORIA=COMPRA.ID_CURVA_MERCADORIA');
+    add('  left OUTER JOIN');
+    add('  (SELECT  CD_EMPRESA,');
+    add('  DT_VENDA_MERCADORIA,');
+    add('  CD_MERCADORIA,');
+    add('  QT_VENDIDA,');
+    add('  QT_DIAS_ESTOQUE_ZERO,');
+    add('  QT_DIAS_VENDA,');
+    add('  QT_MEDIA_VENDA_DIARIA,');
+    add('  QT_MEDIA_VENDA_DIARIA as MEDIA,');
+    add('  QT_DIAS_ESTOQUE_ZERO AS  NR_DIAS,');
+    add('  QT_DIAS_ESTOQUE_ZERO AS  DIAS_SEM_ESTOQUE,');
+    add('  QT_MEDIA_VENDA_DIARIA AS  MEDIA_DIARIA');
+    add('  FROM');
+    add('  PRDDM.DW_VENDA_ACUMULADA_MERCADORIA');
+    add('   WHERE');
+    add('');
+    add('    cd_Mercadoria=34591');
+    add('   AND DT_VENDA_MERCADORIA=Trunc(ADD_MONTHS(TRUNC(SYSDATE,''MONTH''),0))');
+    add('  AND cd_canal=0) venda ON venda.cd_mercadoria=compra.cd_mercadoria AND venda.cd_empresa=compra.cd_empresa');
+    add('');
+    add('');
+    add('  WHERE');
+    add('  COMPRA.CD_GRUPO_FORNECEDOR NOT IN(98)');
+    add('AND (ESTOQUE_FISICO/MEDIA_DIA)>:PnrDiasExcesso');
+   if nrFornecedor>0 then
+       add('AND CD_GRUPO_FORNECEDOR=:PnrFornecedor');
+    if nrComprador>0 then
+    add('  AND CD_COMPRADOR=:PnrComprador)');;
+
+   if PnrCD>0 then
+        add('AND CD_EMPRESA=:PcdEmpresa');
+        add(')');
+
+
+
+
+
+
+
+{    add('SELECT');
+    add('CD_PRODUTO,');
+    add('NM_MERCADORIA,DS_APRESENTACAO_MERCADORIA,');
+    add('ID_CD,');
+    add('CD_GRUPO_FORNECEDOR,');
+    add('DS_GRUPO_FORNECEDOR,');
+    add('TIPO,');
+    add('ID_CURVA_MERCADORIA,');
+    add('ESTOQUE_FISICO,');
+    add('UNID_VENDIDA,');
+    add('QT_DIAS_ESTOQUE_ZERO,');
+    add('NR_PERIODO,');
+    add('NR_DIAS,');
+    add('QT_DIAS_VENDA,');
+    add('MEDIA_DIA,');
+    add('MEDIA_DIA*30 AS MEDIA_MENSAL,');
+    add('QT_DIAS_LEADTIME_FABRICANTE LEAD_TIME,');
+    add('QT_ESTOQUE_MAXIMO,');
+    add('QT_ESTOQUE_MINIMO,');
+    add('ROUND((ESTOQUE_FISICO/MEDIA_DIA)-:PnrDiasExcesso ,0)  AS NR_DIAS_EXCESSO,');
+    add('ROUND((ESTOQUE_FISICO/MEDIA_DIA)-:PnrDiasExcesso ,0)*MEDIA_DIA  AS NR_UNID_EXCESSO,');
+    add('VL_CUSTO,');
+    add('VL_PRECO_COMPRA,');
+    add('VL_PRECO_VENDA,');
+    add('ROUND((ROUND((ESTOQUE_FISICO/MEDIA_DIA)-:PnrDiasExcesso,0)*MEDIA_DIA),0)*VL_CUSTO VL_EXCESSO_FINANCEIRO,');
+    add('ROUND((ROUND((ESTOQUE_FISICO/MEDIA_DIA)-:PnrDiasExcesso,0)*MEDIA_DIA),0)*VL_PRECO_COMPRA VL_EXCESSO_COMPRA,');
+    add('ROUND((ROUND((ESTOQUE_FISICO/MEDIA_DIA)-:PnrDiasExcesso,0)*MEDIA_DIA),0)*VL_PRECO_VENDA VL_EXCESSO_VENDA,');
+    add('CD_COMPRADOR,');
+    add('NM_COMPRADOR_REDUZIDO,');
+    ADD('CD_EMPRESA');
+    add('FROM');
+    add('(SELECT');
+    add('MERCADORIA.CD_MERCADORIA*10+ NR_DV_MERCADORIA AS CD_PRODUTO,');
+    add('NM_MERCADORIA,DS_APRESENTACAO_MERCADORIA,');
+    add('CD_COMPRADOR,');
+    add('NM_COMPRADOR_REDUZIDO,');
+    add('(SELECT NM_EMPRESA FROM ACESSO.DC_EMPRESA Emp WHERE emp.CD_EMPRESA=ESTOQUE.CD_EMPRESA) AS  ID_CD,');
+    add('GRUPO_FORNECEDOR.CD_GRUPO_FORNECEDOR, DS_GRUPO_FORNECEDOR,');
+    add('DECODE(DS_NIVEL_ECNM,1,''MED'',2,''PERF'',''OUTR'') TIPO,');
+    add('COMPRA.ID_CURVA_MERCADORIA,');
+    add('(QT_FISICO -QT_RESERVADO-QT_RESERVA_PROBLEMATICA-QT_VENCIDO) ESTOQUE_FISICO,');
+    add('NVL(QT_VENDIDA,0) AS UNID_VENDIDA,');
+    add('NVL(QT_DIAS_ESTOQUE_ZERO,0) AS QT_DIAS_ESTOQUE_ZERO,');
+    add('NVL(NR_PERIODO,0) AS NR_PERIODO,');
+    add('NVL(MEDIA_SIS,0) AS MEDIA_SIS,');
+    add('NVL(MEDIA_CALC,0) AS MEDIA_CALC,');
+    add('NVL(NR_DIAS,0) AS NR_DIAS,');
+    add('NVL(QT_DIAS_VENDA,0) AS QT_DIAS_VENDA,');
+    add('CASE');
+    add('WHEN (NR_DIAS - QT_DIAS_ESTOQUE_ZERO) >0 THEN');
+    add('ROUND(NVL(QT_VENDIDA,0)/ (NR_DIAS - QT_DIAS_ESTOQUE_ZERO),2)');
+    add('ELSE 0');
+    add('END MEDIA_DIA,');
+    add('QT_DIAS_LEADTIME_FABRICANTE,');
+    add('(QT_ESTOQUE_MAXIMO+QT_DIAS_LEADTIME_FABRICANTE) as QT_ESTOQUE_MAXIMO,');
+    add('QT_ESTOQUE_MINIMO,');
+    add('CASE');
+    add(' WHEN QT_FISICO>0 THEN ROUND(VT_CUSTO_FINANCEIRO_MERCADORIA/QT_FISICO,2)');
+    add('ELSE 0');
+    add('END VL_CUSTO,');
+    add('VL_PRECO_COMPRA,');
+    add('VL_PRECO_VENDA,');
+    add('ESTOQUE.CD_EMPRESA');
+    add('FROM');
+
+    add('PRDDM.DC_MERCADORIA MERCADORIA');
+    add('JOIN PRDDM.DC_ESTOQUE_MERCADORIA ESTOQUE ON ESTOQUE.CD_MERCADORIA=MERCADORIA.CD_MERCADORIA AND ESTOQUE.ID_SITUACAO_MERCADORIA<>''I''');
+    add('AND ESTOQUE.ID_SITUACAO_MERCADORIA=MERCADORIA.ID_SITUACAO_MERCADORIA');                                                                                                                 // trunc(DT_PRIMEIRA_COMPRA)<trunc(Round(SYSDATE-90)
+    add('LEFT OUTER JOIN PRDDM.DC_COMPRA_MERCADORIA COMPRA ON COMPRA.CD_EMPRESA=ESTOQUE.CD_EMPRESA AND COMPRA.CD_MERCADORIA=ESTOQUE.CD_MERCADORIA AND Round(SYSDATE-DT_PRIMEIRA_COMPRA,0)>=90');
+    add('LEFT OUTER JOIN PRDDM.DC_FINANCEIRO_MERCADORIA FINANCEIRO ON COMPRA.CD_EMPRESA=FINANCEIRO.CD_EMPRESA AND COMPRA.CD_MERCADORIA=FINANCEIRO.CD_MERCADORIA');
+    add('LEFT OUTER JOIN PRDDM.DC_GRUPO_FORNECEDOR GRUPO_FORNECEDOR ON  GRUPO_FORNECEDOR.CD_GRUPO_FORNECEDOR=COMPRA.CD_GRUPO_FORNECEDOR');
+    add('LEFT OUTER JOIN PRDDM.DC_COMPRADOR_GAM COMPRADOR   ON COMPRADOR.CD_EMPRESA=1 AND COMPRADOR.NR_COMPRADOR=COMPRA.CD_COMPRADOR');
+    add('LEFT OUTER JOIN PRDDM.DC_GRUPO_FABRICANTE_MERCADORIA CURVA_GRUPO ON CURVA_GRUPO.CD_GRUPO_CURVA_FABRICANTE=GRUPO_FORNECEDOR.CD_GRUPO_CURVA_FABRICANTE');
+    add('AND CURVA_GRUPO.ID_CURVA_MERCADORIA=COMPRA.ID_CURVA_MERCADORIA');
+    add('LEFT OUTER JOIN');
+    add('(SELECT');
+    add('CD_EMPRESA,');
+    add('CD_MERCADORIA,');
+    add('SUM(QT_VENDIDA) AS QT_VENDIDA,');
+    add('ROUND(( ADD_MONTHS(TRUNC(sysdate,''MONTH''),0)  - TRUNC(MIN(DT_VENDA_MERCADORIA)))- MAX(QT_DIAS_ESTOQUE_ZERO),0) NR_DIAS,');
+    add('COUNT(*) AS NR_PERIODO,');
+    add('MAX(QT_DIAS_ESTOQUE_ZERO) QT_DIAS_ESTOQUE_ZERO,');
+    add('ROUND(SUM(QT_MEDIA_VENDA_DIARIA) /COUNT(*),2) MEDIA_SIS,');
+    add('ROUND(SUM(QT_VENDIDA)/ROUND((SYSDATE  - TRUNC(MIN(DT_VENDA_MERCADORIA)))- MAX(QT_DIAS_ESTOQUE_ZERO),0),2) MEDIA_CALC,');
+    add('SUM(QT_DIAS_VENDA) AS QT_DIAS_VENDA');
+    add('FROM');
+    add('(SELECT  CD_EMPRESA,');
+    add('DT_VENDA_MERCADORIA,');
+    add('CD_MERCADORIA,');
+    add('SUM(QT_VENDIDA) AS QT_VENDIDA,');
+    add('QT_DIAS_ESTOQUE_ZERO,');
+    add('MAX(QT_DIAS_VENDA) AS QT_DIAS_VENDA,');
+    add('MAX(QT_MEDIA_VENDA_DIARIA) AS QT_MEDIA_VENDA_DIARIA,');
+    add('ROUND(SUM(QT_VENDIDA)/ MAX(QT_DIAS_VENDA),2) AS MEDIA,');
+    add('((ADD_MONTHS(TRUNC(MAX(DT_VENDA_MERCADORIA),''MONTH''),1)  - TRUNC(MIN(DT_VENDA_MERCADORIA)))- SUM(QT_DIAS_ESTOQUE_ZERO)) NR_DIAS,');
+    add('ROUND((SYSDATE  - TRUNC(MIN(DT_VENDA_MERCADORIA)))- SUM(QT_DIAS_ESTOQUE_ZERO),0) NR_DIAS,');
+    add('SUM(QT_DIAS_ESTOQUE_ZERO) DIAS_SEM_ESTOQUE,');
+    add('CASE');
+    add('WHEN ROUND(SYSDATE - TRUNC(MIN(DT_VENDA_MERCADORIA))-MAX(QT_DIAS_ESTOQUE_ZERO),0)>0 THEN');
+    add('ROUND(SUM(QT_VENDIDA)/ ROUND(SYSDATE - TRUNC(MIN(DT_VENDA_MERCADORIA))-MAX(QT_DIAS_ESTOQUE_ZERO),0),2)');
+    add('ELSE 0');
+    add('END MEDIA_DIARIA');
+    add('FROM');
+    add('PRDDM.DC_VENDA_ACUMULADA_MERCADORIA');
+    add(' WHERE');
+       if PnrCD>0 then
+        add('CD_EMPRESA=:PcdEmpresa AND ');
+
+    add('DT_VENDA_MERCADORIA>=ADD_MONTHS(TRUNC(SYSDATE,''MONTH''),-3)');
+    add('AND DT_VENDA_MERCADORIA<TRUNC(SYSDATE,''MONTH'')');
+    add('GROUP BY CD_EMPRESA,');
+    add('DT_VENDA_MERCADORIA,');
+    add('CD_MERCADORIA,');
+    add('QT_DIAS_ESTOQUE_ZERO)');
+    add('GROUP BY CD_EMPRESA,');
+    add('CD_MERCADORIA) VENDA ON VENDA.CD_MERCADORIA=MERCADORIA.CD_MERCADORIA');
+    add('WHERE');
+     if PnrCD>0 then
+        add('VENDA.CD_EMPRESA=:PcdEmpresa AND ');
+
+    add('COMPRA.CD_GRUPO_FORNECEDOR NOT IN(98))');
+    add('WHERE');
+    add('MEDIA_DIA>0');
+    if PnrCD>0 then
+        add('AND CD_EMPRESA=:PcdEmpresa');
+
+    add('AND (ESTOQUE_FISICO/MEDIA_DIA)>:PnrDiasExcesso');
+    if cdProduto>0 then
+       add('AND CD_PRODUTO=:PcdProduto');
+    if nrFornecedor>0 then
+       add('AND CD_GRUPO_FORNECEDOR=:PnrFornecedor');
+    if nrComprador>0 then
+      add('AND CD_COMPRADOR=:PnrComprador');}
+   end;
+   stQuery.SaveToFile('c:\temp\RelatorioExcesso.sql');
+   with _cdsExcesso do
+   begin
+     close;
+     CommandText:=stQuery.Text;
+     Params.ParamByName('PnrDiasExcesso').AsInteger:=nrDiasExcesso;
+    if cdProduto>0 then
+       Params.ParamByName('PcdProduto').AsInteger:=cdProduto;
+    if nrFornecedor>0 then
+       Params.ParamByName('PnrFornecedor').AsInteger:=nrFornecedor;
+    if nrComprador>0 then
+       Params.ParamByName('PnrComprador').AsInteger:=nrComprador;
+    if PnrCD>0 then
+       Params.ParamByName('PcdEmpresa').AsInteger:=PnrCD;
+
+     open;
+    end;
+    Result:=true;
+ finally
+   FreeAndNil(stQuery);
+ end;
+end;
+
+
+PROCEDURE T_frmRelatoriodeExcesso.executaPesquisa;
+var
+ nrDiasExcesso,
+ cdProduto,
+ nrFornecedor,
+ nrEmpresa,
+ nrComprador:Integer;
+begin
+ try
+ _btnExecuta.Enabled:=false;
+ nrDiasExcesso:=StrToIntDef(_edtNrdiasExcesso.Text,0);
+ cdProduto    :=StrToIntDef(_edtCodProduto.Text,0);
+ nrFornecedor :=StrToIntDef(_edtNrFornecedor.Text,0);
+ nrComprador  :=StrToIntDef(_edtNrComprador.Text,0);
+
+ nrEmpresa   := StrToIntDef(copy(_cbxOpcaoCDs.Text,1,2),0);
+
+ GeraTabelaExecesso(nrDiasExcesso,cdProduto,nrFornecedor,nrComprador,nrEmpresa);
+ _dsExcesso.DataSet:=_cdsExcesso;
+ _cdsExcesso.Open;
+
+    _edtValordoExcessoCusto.Text:=FormatFloat('###,###,##0.00',0);
+    _edtValorExcessoPcoCompra.Text:=FormatFloat('###,###,##0.00',0);
+    _edtValorExcessoPcoVda.Text:=FormatFloat('###,###,##0.00',0);
+    _edtNrUnidadesExcesso.Text:=FormatFloat('###,###,##0',0);
+
+
+ if not _cdsExcesso.IsEmpty then
+ begin
+    _edtValordoExcessoCusto.Text:=FormatFloat('###,###,##0.00',_cdsExcessoVT_EXCESSO_FINANCEIRO.AsVariant);
+    _edtValorExcessoPcoCompra.Text:=FormatFloat('###,###,##0.00',_cdsExcessoVT_EXCESSO_COMPRA.AsVariant);
+    _edtValorExcessoPcoVda.Text:=FormatFloat('###,###,##0.00',_cdsExcessoVT_EXCESSO_VENDA.AsVariant);
+    _edtNrUnidadesExcesso.Text:=FormatFloat('###,###,##0',_cdsExcessoNR_UNID_ACIMA_PARAMETRO.AsVariant);
+ end;
+
+ SetGridExcesso;
+ finally
+  _btnExecuta.Enabled:=true;
+
+ end;
+end;
+
+
+
+procedure T_frmRelatoriodeExcesso.CarregaEmpresa;
+var
+  tempQuery : TSQLQuery;
+begin
+  tempQuery := nil;
+  try
+    tempQuery := _dm.criaQueryGenerica;
+    tempQuery.close;
+    tempQuery.SQL.Clear;
+    tempQuery.SQL.Add('SELECT CD_EMPRESA,NM_EMPRESA,CD_EMPRESA_FISICA');
+    tempQuery.SQL.Add('FROM');
+    tempQuery.SQL.Add('ACESSO.DC_EMPRESA');
+    tempQuery.SQL.Add('WHERE');
+    tempQuery.SQL.Add('ID_EMPRESA_FISICA=''S''');
+    tempQuery.SQL.Add('and ID_SITUACAO_EMPRESA=''A''');
+    tempQuery.SQL.Add('AND ID_OPERACAO_REDE=''N''');
+    tempQuery.SQL.Add('UNION ALL');
+    tempQuery.SQL.Add('SELECT CD_EMPRESA,NM_EMPRESA,CD_EMPRESA_FISICA');
+    tempQuery.SQL.Add('FROM');
+    tempQuery.SQL.Add('ACESSO.DC_EMPRESA');
+    tempQuery.SQL.Add('WHERE     ID_OPERACAO_REDE=''S''');
+    tempQuery.SQL.Add('ORDER BY 1');
+    tempQuery.Open;
+    tempQuery.First;
+
+    _cbxOpcaoCDs.Clear;
+    //_cbxOpcaoCDs.Items.Add('00 - Todos');
+    while not tempQuery.eof do
+    begin
+       _cbxOpcaoCDs.Items.Add( FormatFloat('00',tempQuery.FieldByName('CD_EMPRESA').AsInteger)+' - '+
+                                tempQuery.FieldByName('nm_empresa').AsString );
+      tempQuery.Next;
+    end;
+    _cbxOpcaoCDs.ItemIndex:=0;
+
+  finally
+    tempQuery.Close;
+    tempQuery.Free;
+  end;
+end;
+
+
+
+end.

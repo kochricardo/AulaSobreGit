@@ -1,0 +1,24 @@
+unit uParemetroCompras;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs;
+
+type
+  T_frmCadastroParametro = class(TForm)
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmCadastroParametro: T_frmCadastroParametro;
+
+implementation
+
+{$R *.dfm}
+
+end.

@@ -1,0 +1,24 @@
+unit uCadasrtaEventoPedido;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs;
+
+type
+  T_frmCadastraEventoPedido = class(TForm)
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmCadastraEventoPedido: T_frmCadastraEventoPedido;
+
+implementation
+
+{$R *.dfm}
+
+end.

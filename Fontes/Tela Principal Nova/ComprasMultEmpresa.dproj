@@ -1,0 +1,376 @@
+﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<ProjectGuid>{D7464371-2DCC-4974-B2B4-F8EAFF760F22}</ProjectGuid>
+			<ProjectVersion>12.3</ProjectVersion>
+			<MainSource>ComprasMultEmpresa.dpr</MainSource>
+			<Base>True</Base>
+			<Config Condition="'$(Config)'==''">Debug</Config>
+			<Platform>Win32</Platform>
+			<AppType>Application</AppType>
+			<FrameworkType>VCL</FrameworkType>
+			<DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_1)'!=''">
+			<Cfg_1>true</Cfg_1>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_2)'!=''">
+			<Cfg_2>true</Cfg_2>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Base)'!=''">
+			<DCC_UsePackage>vclx;vcl;vclimg;dbrtl;Rave90VCL;bdertl;VclSmp;rtl;svnui;svn;TeeUI;TeeDB;Tee;vclactnband;vcldb;vcldbx;vcltouch;xmlrtl;dsnap;dsnapcon;vclib;ibxpress;adortl;IndyCore;IndySystem;IndyProtocols;inet;intrawebdb_110_150;Intraweb_110_150;vclie;websnap;webdsnap;inetdb;inetdbbde;inetdbxpress;soaprtl;vclribbon;dbexpress;DbxCommonDriver;DataSnapIndy10ServerTransport;DataSnapProviderClient;DbxClientDriver;DataSnapClient;dbxcds;DataSnapServer;AzureCloud;DBXInterBaseDriver;DBXMySQLDriver;DBXFirebirdDriver;DBXSybaseASEDriver;DBXSybaseASADriver;DBXOracleDriver;DBXMSSQLDriver;DBXInformixDriver;DBXDb2Driver;CodeSiteExpressVcl;rxctl;dclOfficeXP</DCC_UsePackage>
+			<DCC_ImageBase>00400000</DCC_ImageBase>
+			<DCC_DcuOutput>.\$(Config)\$(Platform)</DCC_DcuOutput>
+			<DCC_UnitAlias>WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;$(DCC_UnitAlias)</DCC_UnitAlias>
+			<DCC_ExeOutput>.\$(Config)\$(Platform)</DCC_ExeOutput>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_1)'!=''">
+			<DCC_ExeOutput>C:\Gam\ProducaoSoftware\Sistemas\Desktop\ComprasNovaMedia_08072020\</DCC_ExeOutput>
+			<DCC_DcuOutput>C:\Gam\ProducaoSoftware\Sistemas\Desktop\ComprasNovaMedia_08072020\Fontes\Dcu\</DCC_DcuOutput>
+			<DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
+			<DCC_Optimize>false</DCC_Optimize>
+			<DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_2)'!=''">
+			<DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
+			<DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
+			<DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+			<DCC_DebugInformation>false</DCC_DebugInformation>
+		</PropertyGroup>
+		<ItemGroup>
+			<DelphiCompile Include="ComprasMultEmpresa.dpr">
+				<MainSource>MainSource</MainSource>
+			</DelphiCompile>
+			<DCCReference Include="uTelaPrincipal.pas">
+				<Form>_frmTelaPrincipal</Form>
+			</DCCReference>
+			<DCCReference Include="..\DM Imagens Novas\uDMImagensMovas.pas">
+				<Form>_dmImagensPequenas</Form>
+				<DesignClass>TDataModule</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\DM Principal\uDm.pas">
+				<Form>_dm</Form>
+				<DesignClass>TDataModule</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\Rotina Conexao\UtilConexao.pas"/>
+			<DCCReference Include="..\Tela Login\ufrmLogin.pas">
+				<Form>_frmLogin</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Login\uAlteraSenha.pas">
+				<Form>_frmAlteraSenha</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Agenda Laboratorio\uAgendaLaboratorio.pas">
+				<Form>_frmAgendaCompras</Form>
+			</DCCReference>
+			<DCCReference Include="..\Rotinas do Sistema Compras\uSistemaCompras.pas"/>
+			<DCCReference Include="..\Tela Compras\uAuxiliarCompras.pas"/>
+			<DCCReference Include="..\Tela Selecao Operador Logistico\uSelecaoOperadorLogistico.pas">
+				<Form>_frmSelecaoOPeradorLogistico</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Cancela Pedido Suspensos\uCancelaPedidoSuspenso.pas">
+				<Form>_frmCancelaPedidoSuspensos</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Divide Pedido\uDividiPedido.pas">
+				<Form>_frmDivisaoDePedido</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Confirma Pedido\uConfirmaPedido.pas">
+				<Form>_frmConfirmaPedido</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Pendencia Pedido\uPendenciaItem.pas">
+				<Form>_frmPendenciaItem</Form>
+			</DCCReference>
+			<DCCReference Include="..\Rotina Generica\uRotinasGenericas.pas"/>
+			<DCCReference Include="..\Tele Preco Desconto\uPrecoDescontoItem.pas">
+				<Form>_frmPrecoDesconto</Form>
+			</DCCReference>
+			<DCCReference Include="..\Rotina Margem GAM\uRotinaMargemGam.pas"/>
+			<DCCReference Include="..\Tela Envio Pedido Van\uEnvioPedido.pas">
+				<Form>_frmEnvioPedido</Form>
+			</DCCReference>
+			<DCCReference Include="..\Rotina Ftp\UploadArquivo.pas"/>
+			<DCCReference Include="..\Tela Envio Arquivo\uTransferenciaDeArquivo.pas">
+				<Form>_frmTransferenciaArquivo</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Aplica Verba Pedido\uAplicarVerbaPedido.pas">
+				<Form>_frmAplicarVerbaPedido</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela de Estoque Acima de X dias\uEstoqueAcimadeXdias.pas">
+				<Form>_frmEstoqueAcimadeXDias</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Excesso Produto\uExcessoProduto.pas">
+				<Form>_frmRelatoriodeExcesso</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Relatorio Verbas\uRelatorioVerbas.pas">
+				<Form>_frmRelatorioVerba</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Padrão\uTelaPadrao.pas">
+				<Form>_frmPadrao</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Sugestao de Compra\uSugestaodeCompra.pas">
+				<Form>_frmSugestaodeCompra</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Laboratorio Pendencia\uLaboratorioPendencia.pas">
+				<Form>_frmLaboratorioPendencia</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela EstoquePendencia\uEstoquePendencia.pas">
+				<Form>_frmEstoquePendencia</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Dados Produto\uDadosProdutos.pas">
+				<Form>_frmDadosProduto</Form>
+			</DCCReference>
+			<DCCReference Include="..\Formulario Modelo\ufrmModelo.pas">
+				<Form>_frmModelo</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Acerto Data Agenda\uSetDataAgenda.pas">
+				<Form>_frmAcertaDataAgenda</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Relacao Pedido\uRelacaoPedido.pas">
+				<Form>_frmRelacaoPedidos</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Cadastro Paramentos VAN\uCadastroParamentoVan.pas">
+				<Form>_frmCadastroParamentoVan</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Nfe Relacao Nfe Recebida\uRelacaoNFeRecebida.pas">
+				<Form>_frmNfeRelacaoNFeRecebida</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Nfe Visualiza Critica Pedido Nfe\uVisualizaCriticaPedidoNFe.pas">
+				<Form>_frmVisualizaCriticaNFe</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Nfe Relatorio Critica EntradaNovo\uRelatorioCriticaEntradaNovo.pas">
+				<Form>_frRelatorioCriticaEntradaNovo</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Nfe Critica Quantidade\uRelatorioCriticaQuantidade.pas">
+				<Form>_frRelatorioCriticaQuantidade</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Nfe Visualizado Pedido Compra\uVisualizaPedidoCompra.pas">
+				<Form>_frmVisualizaPedidoCompra</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Nfe Visualizar Dados Nfe\uVisualizaDadosNFe.pas">
+				<Form>_frmNfeVisualizaDanfe</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Nfe Historico Critica Nfe\uHistoricoCriticaNFe.pas">
+				<Form>_frmNfeHistoricoCriticaNFe</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Estoque Zero\uEstoqueZero.pas">
+				<Form>_frmEstoqueZero</Form>
+			</DCCReference>
+			<DCCReference Include="..\uComparacaoAnual.pas">
+				<Form>_frmComparacaoAnual</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Ultimos Pedido\uUltimosPedidos.pas">
+				<Form>_frmUltimosPedidos</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Relatorio Classificao Produto\uRelatorioProdutoClassificacao.pas">
+				<Form>_frmRelatorioClassificacaoProduto</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Correção de Verba\uCorrecaoVerbaPedido.pas">
+				<Form>_frmCorrecaoVerba</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Lista de Verba\uListagemSaldoVerba.pas">
+				<Form>_frmListagemdeverbas</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela  Inativados Cadastrados\uInativadosCadastrados.pas">
+				<Form>_frmCadastradosInativados</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Comparação de Venda Anual\uComparaVendaAnual.pas">
+				<Form>_frmComparacaoAnualVenda</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Pendencia Comprador\uPendenciaComprador.pas">
+				<Form>_frmPendenciaComprador</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela NFE Critica Pedido\uCriticaPedidoNfe.pas">
+				<Form>_frmNfeCriticaPedidoNfe</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Nivel Serviço Comprador\uNivelServico.pas">
+				<Form>_frmNivelServico</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Cadastrao Evento Pedido\uCadasrtaEventoPedido.pas">
+				<Form>_frmCadastraEventoPedido</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Lista Agenda\uListaAgendaCompradores.pas">
+				<Form>_frmListaAgendaCompradores</Form>
+			</DCCReference>
+			<DCCReference Include="..\TelaJustificativaMudancaCurva\uJustificativa.pas">
+				<Form>_frmJusticaCurva</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Produto em Espera\uProdutoEmEspera.pas">
+				<Form>_frmProdutoEmEspera</Form>
+			</DCCReference>
+			<DCCReference Include="..\Rotina Usuario\uUsuario.pas"/>
+			<DCCReference Include="..\Rotina Usuario\MessageDigest_5.pas"/>
+			<DCCReference Include="..\Tela Ponto Encomenda\uPontoEncomenda.pas">
+				<Form>_frmPontoEncomenda</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Comprador\uTelaComprador.pas">
+				<Form>_frmCompradorDisponivel</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Cadastro Verba por Usuario\uCadastrodeVerbaUsuario.pas">
+				<Form>_frmCadastroVerbaUsuario</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Pesquisa\uTelaPesquisa.pas">
+				<Form>_frmPesquisa</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Grafico Pedido Vendas\uGraficoPedidoVendas.pas">
+				<Form>_frmGraficoPedidoVendas</Form>
+			</DCCReference>
+			<DCCReference Include="..\Rotinas SQL Sistemas\uSqlConsultaSistemas.pas"/>
+			<DCCReference Include="..\Tela Dados Pedido\uDadosPedido.pas">
+				<Form>_frmDadosPedido</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Itens Nao Atendidos\uItensNaoAtendidos.pas">
+				<Form>_frmItensNaoAtendidos</Form>
+			</DCCReference>
+			<DCCReference Include="..\Pedidos Com atraso no Faturamento\uPedidoFaturamemtoAtrasado.pas">
+				<Form>_frmPedidosFaturamentoAtrasados</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Pedido PreElaborado\uPedidoPreElaborado.pas">
+				<Form>_frmPedidoElabortado</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Pedido Especial\uTelaPedidoEspecial.pas">
+				<Form>_frmPedidoEspecial</Form>
+			</DCCReference>
+			<DCCReference Include="..\TelaDadosItemPedido\uDadosItemPedido.pas">
+				<Form>_frmDigitacaoItemPedido</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Importação de Preco Fornecedor\uImportaPrecoFornecedor.pas">
+				<Form>_frmImportaPrecoFornecedor</Form>
+			</DCCReference>
+			<DCCReference Include="..\Rotina Produto\uProduto.pas"/>
+			<DCCReference Include="..\Tela Compras Nova\uTesteGrafico.pas"/>
+			<DCCReference Include="uTelaComprasNovaII.pas">
+				<Form>_frmTelaCompras</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Ativar Pedido\uAtivarPedido.pas">
+				<Form>_frmAtivaPedido</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Observação Fornecedor\uObservacaoNoFornecedor.pas">
+				<Form>_frmObservacaoLaboratorio</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Pedido Operacao Redes\uPedidoOperacaoRede.pas">
+				<Form>_frmPedidosRedes</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Observcao Inativacao\uObservacaoInativacaoBloqueio.pas">
+				<Form>_frmMotivoInativacaoBloqueio</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Critica Pedido Rede\uCriticaPedidoOPeracaoRede.pas">
+				<Form>_FrmCriticaPedidoOperacao</Form>
+			</DCCReference>
+			<DCCReference Include="..\Rotina Cliente\ucliente.pas"/>
+			<DCCReference Include="..\Tela Altera ItemPedido\uAlteraItemPedido.pas">
+				<Form>_frmAterandoItemPedido</Form>
+			</DCCReference>
+			<DCCReference Include="..\uImportaPedidoCompra.pas">
+				<Form>_frmImportaPedidoFornecedor</Form>
+			</DCCReference>
+			<DCCReference Include="UCorrecaoIcmaCompra.pas">
+				<Form>_frmCorrecaoIcmCompra</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Prazo Pedido\uTelaPrazoPedido.pas">
+				<Form>_frmTelaPrazoPedido</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Relatorio Produtos Fornecedor\uRelatorioProdutoFornecedor.pas">
+				<Form>_frmRelatorioProdutoFornecedor</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Produtos ReservaVencidos\uProdutosReservaVencidos.pas">
+				<Form>_frmRelatorioProdutoReservaVencidos</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Relatorio Produto Com Possibilidade de Vencimento\uProdutoPossibilidadeVencimento.pas">
+				<Form>_frmProdutoPossibilidadeVencimento</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Finaliza Pedido Excel\uFinalizaPedidoExcel.pas">
+				<Form>_frmFinalizaPedidoExcel</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Relatório Estoque por CD\uRelatorioEstoquePorCD.pas">
+				<Form>_frmRelatorioEstoquePorCD</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Cancela Pendencia Excel\uCancelaPendenciaExcel.pas">
+				<Form>_frmCancelaPendenciaExcel</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Atualização Preco Pedido\uAtualizacaoPrecoPedido.pas">
+				<Form>_frmAtualizaprecoPedido</Form>
+			</DCCReference>
+			<DCCReference Include="..\uListaVerba.pas">
+				<Form>_frmListaVerbaFornecedor</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela ParametroCompras\uParametroCompras.pas">
+				<Form>_frmCadastroParametro</Form>
+			</DCCReference>
+			<DCCReference Include="uCalendario.pas">
+				<Form>_frmCalendario</Form>
+			</DCCReference>
+			<DCCReference Include="..\Tela Aviso de Pedido Em Analise\uPedidoEmAnaliseApi.pas">
+				<Form>_frmPedidoEmAnalise</Form>
+			</DCCReference>
+			<None Include="ModelSupport_ComprasMultEmpresa\default.txvpck"/>
+			<None Include="ModelSupport_ComprasMultEmpresa\uExcessoProduto\default.txvpck"/>
+			<None Include="ModelSupport_ComprasMultEmpresa\ComprasMultEmpresa\default.txvpck"/>
+			<None Include="ModelSupport_ComprasMultEmpresa\uExcessoProduto\default.txaPackage"/>
+			<BuildConfiguration Include="Release">
+				<Key>Cfg_2</Key>
+				<CfgParent>Base</CfgParent>
+			</BuildConfiguration>
+			<BuildConfiguration Include="Base">
+				<Key>Base</Key>
+			</BuildConfiguration>
+			<BuildConfiguration Include="Debug">
+				<Key>Cfg_1</Key>
+				<CfgParent>Base</CfgParent>
+			</BuildConfiguration>
+		</ItemGroup>
+		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')" Project="$(BDS)\Bin\CodeGear.Delphi.Targets"/>
+		<Import Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')" Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj"/>
+		<ProjectExtensions>
+			<Borland.Personality>Delphi.Personality.12</Borland.Personality>
+			<Borland.ProjectType/>
+			<BorlandProject>
+				<Delphi.Personality>
+					<VersionInfo>
+						<VersionInfo Name="IncludeVerInfo">True</VersionInfo>
+						<VersionInfo Name="AutoIncBuild">True</VersionInfo>
+						<VersionInfo Name="MajorVer">1</VersionInfo>
+						<VersionInfo Name="MinorVer">1</VersionInfo>
+						<VersionInfo Name="Release">1</VersionInfo>
+						<VersionInfo Name="Build">148</VersionInfo>
+						<VersionInfo Name="Debug">False</VersionInfo>
+						<VersionInfo Name="PreRelease">False</VersionInfo>
+						<VersionInfo Name="Special">False</VersionInfo>
+						<VersionInfo Name="Private">False</VersionInfo>
+						<VersionInfo Name="DLL">False</VersionInfo>
+						<VersionInfo Name="Locale">1046</VersionInfo>
+						<VersionInfo Name="CodePage">1252</VersionInfo>
+					</VersionInfo>
+					<VersionInfoKeys>
+						<VersionInfoKeys Name="CompanyName">GAM - Genésio A. Mendes &amp; Cia Ltda.</VersionInfoKeys>
+						<VersionInfoKeys Name="FileDescription">Sistema de Compras MultiEmpresa</VersionInfoKeys>
+						<VersionInfoKeys Name="FileVersion">1.1.1.148</VersionInfoKeys>
+						<VersionInfoKeys Name="InternalName"/>
+						<VersionInfoKeys Name="LegalCopyright"/>
+						<VersionInfoKeys Name="LegalTrademarks"/>
+						<VersionInfoKeys Name="OriginalFilename"/>
+						<VersionInfoKeys Name="ProductName">GAM - Genésio A. Mendes &amp; Cia Ltda.</VersionInfoKeys>
+						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="Comments"/>
+						<VersionInfoKeys Name="Author">Ricardo Koch</VersionInfoKeys>
+					</VersionInfoKeys>
+					<Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dclofficexp150.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dcloffice2k150.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+					</Excluded_Packages>
+					<Source>
+						<Source Name="MainSource">ComprasMultEmpresa.dpr</Source>
+					</Source>
+				</Delphi.Personality>
+				<Platforms>
+					<Platform value="Win32">True</Platform>
+				</Platforms>
+				<ModelSupport>True</ModelSupport>
+			</BorlandProject>
+			<ProjectFileVersion>12</ProjectFileVersion>
+		</ProjectExtensions>
+	</Project>

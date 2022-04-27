@@ -1,0 +1,54 @@
+unit uDadosPedido;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, ComCtrls;
+
+type
+  T_frmDadosPedido = class(TForm)
+    StatusBar1: TStatusBar;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    _edtEmissaoPedido: TEdit;
+    _edDataEmissaoNfe: TEdit;
+    _edtEntradaNfe: TEdit;
+    _edtDataValidade: TEdit;
+    _edtQtdadePedido: TEdit;
+    _edtQtdadeNfe: TEdit;
+    EdtQtadeEntrada: TEdit;
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmDadosPedido: T_frmDadosPedido;
+
+implementation
+
+{$R *.dfm}
+
+procedure T_frmDadosPedido.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  action:=cafree;
+end;
+
+procedure T_frmDadosPedido.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  case key of
+     VK_RETURN,VK_ESCAPE : close;
+  end;
+
+end;
+
+end.

@@ -1,0 +1,31 @@
+unit uJustificativa;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, DB, DBClient, StdCtrls, Buttons, ExtCtrls, Grids, DBGrids;
+
+type
+  T_frmJusticaCurva = class(TForm)
+    GroupBox1: TGroupBox;
+    DBGrid1: TDBGrid;
+    GroupBox2: TGroupBox;
+    LabeledEdit1: TLabeledEdit;
+    BitBtn1: TBitBtn;
+    _dsMotivo: TDataSource;
+    _cdsMotivos: TClientDataSet;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmJusticaCurva: T_frmJusticaCurva;
+
+implementation
+
+{$R *.dfm}
+
+end.

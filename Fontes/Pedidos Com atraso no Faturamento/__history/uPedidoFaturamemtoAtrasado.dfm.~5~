@@ -1,0 +1,65 @@
+object _frmPedidosFaturamentoAtrasados: T_frmPedidosFaturamentoAtrasados
+  Left = 0
+  Top = 0
+  Caption = 'Pedidos com Faturamento na Industria Atrasado '
+  ClientHeight = 417
+  ClientWidth = 928
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  FormStyle = fsMDIChild
+  OldCreateOrder = False
+  Visible = True
+  OnClose = FormClose
+  PixelsPerInch = 96
+  TextHeight = 13
+  object StatusBar1: TStatusBar
+    Left = 0
+    Top = 398
+    Width = 928
+    Height = 19
+    Panels = <>
+    ExplicitLeft = 136
+    ExplicitTop = 392
+    ExplicitWidth = 0
+  end
+  object GroupBox1: TGroupBox
+    Left = 0
+    Top = 0
+    Width = 928
+    Height = 398
+    Align = alClient
+    Caption = 'Pedidos'
+    TabOrder = 1
+    ExplicitLeft = 120
+    ExplicitTop = 56
+    ExplicitWidth = 185
+    ExplicitHeight = 105
+    object DBGrid1: TDBGrid
+      Left = 2
+      Top = 15
+      Width = 924
+      Height = 381
+      Align = alClient
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+    end
+  end
+  object _dsPedidosFaturamentoAtrasado: TDataSource
+    Left = 600
+    Top = 104
+  end
+  object _cdsPedidosFaturamentoAtrasado: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 368
+    Top = 104
+  end
+end

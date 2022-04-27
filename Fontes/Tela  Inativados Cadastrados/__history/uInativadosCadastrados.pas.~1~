@@ -1,0 +1,29 @@
+unit uInativadosCadastrados;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, Grids, DBGrids, DB, DBClient, StdCtrls, ComCtrls;
+
+type
+  T_frmCadastradosInativados = class(TForm)
+    StatusBar1: TStatusBar;
+    GroupBox1: TGroupBox;
+    _cdsInativadosCadastrados: TClientDataSet;
+    _dsInativadosCadastrados: TDataSource;
+    DBGrid1: TDBGrid;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmCadastradosInativados: T_frmCadastradosInativados;
+
+implementation
+
+{$R *.dfm}
+
+end.

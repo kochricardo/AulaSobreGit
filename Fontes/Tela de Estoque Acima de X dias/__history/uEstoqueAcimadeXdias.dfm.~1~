@@ -1,0 +1,47 @@
+object _frmEstoqueAcimadeXDias: T_frmEstoqueAcimadeXDias
+  Left = 0
+  Top = 0
+  Caption = 'Relatorio de Estoque Acima de X Dias informado'
+  ClientHeight = 549
+  ClientWidth = 1070
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  FormStyle = fsMDIChild
+  OldCreateOrder = False
+  Position = poMainFormCenter
+  Visible = True
+  PixelsPerInch = 96
+  TextHeight = 13
+  object GroupBox1: TGroupBox
+    Left = 0
+    Top = 0
+    Width = 1070
+    Height = 369
+    Align = alTop
+    Caption = 'Rela'#231#227'o de Itens Com Excesso'
+    Ctl3D = False
+    ParentCtl3D = False
+    TabOrder = 0
+    ExplicitTop = -6
+    object _dbgExcesso: TDBGrid
+      Left = 1
+      Top = 14
+      Width = 1068
+      Height = 354
+      Align = alClient
+      Ctl3D = False
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+      ParentCtl3D = False
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+    end
+  end
+end

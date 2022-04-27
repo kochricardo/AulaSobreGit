@@ -1,0 +1,64 @@
+object _frmPendenciaItem: T_frmPendenciaItem
+  Left = 0
+  Top = 0
+  Caption = 'Pendencia do Item'
+  ClientHeight = 218
+  ClientWidth = 1071
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  PrintScale = poNone
+  OnActivate = FormActivate
+  OnClose = FormClose
+  OnKeyDown = FormKeyDown
+  PixelsPerInch = 96
+  TextHeight = 13
+  object _dbgPendencia: TDBGrid
+    Left = 0
+    Top = 0
+    Width = 1071
+    Height = 199
+    Align = alClient
+    DataSource = _dsPendencia
+    TabOrder = 0
+    TitleFont.Charset = DEFAULT_CHARSET
+    TitleFont.Color = clWindowText
+    TitleFont.Height = -11
+    TitleFont.Name = 'Tahoma'
+    TitleFont.Style = []
+    OnDrawColumnCell = _dbgPendenciaDrawColumnCell
+    OnDblClick = _dbgPendenciaDblClick
+  end
+  object StatusBar1: TStatusBar
+    Left = 0
+    Top = 199
+    Width = 1071
+    Height = 19
+    Panels = <
+      item
+        Text = '<F5> Elimina Pend'#234'ncia do Item'
+        Width = 50
+      end>
+    ExplicitWidth = 930
+  end
+  object _cdsPendencia: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 232
+    Top = 24
+  end
+  object _dsPendencia: TDataSource
+    DataSet = _cdsPendencia
+    Left = 376
+    Top = 32
+  end
+  object _dsTemp: TDataSource
+    Left = 320
+    Top = 32
+  end
+end

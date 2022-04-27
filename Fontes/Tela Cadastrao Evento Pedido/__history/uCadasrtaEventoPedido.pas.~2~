@@ -1,0 +1,40 @@
+unit uCadasrtaEventoPedido;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, Grids, DBGrids, DB, DBClient, StdCtrls, Buttons;
+
+type
+  T_frmCadastraEventoPedido = class(TForm)
+    _grPedidoSemEvento: TGroupBox;
+    BitBtn1: TBitBtn;
+    _cdsPedidoSemEventos: TClientDataSet;
+    _dsPedidoSemEventos: TDataSource;
+    DBGrid1: TDBGrid;
+    procedure BitBtn1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmCadastraEventoPedido: T_frmCadastraEventoPedido;
+
+implementation
+
+uses uAuxiliarCompras;
+
+{$R *.dfm}
+
+procedure T_frmCadastraEventoPedido.BitBtn1Click(Sender: TObject);
+begin
+  _cdsPedidoSemEventos:=CarregaPedidoSemEventos;
+  _dsPedidoSemEventos.DataSet:=_cdsPedidoSemEventos;
+  if _cdsPedidoSemEventos<>nil then
+      _cdsPedidoSemEventos.open;
+end;
+
+end.

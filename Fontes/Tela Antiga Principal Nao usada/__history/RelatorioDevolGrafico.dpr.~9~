@@ -1,0 +1,21 @@
+program RelatorioDevolGrafico;
+
+uses
+  Forms,
+  uPrincipal in 'uPrincipal.pas' {_frmPrincipal},
+  uDm in '..\DM Principal\uDm.pas' {_dm: TDataModule},
+  uDevolucaoMeio in '..\Tela Devolucao Meio\uDevolucaoMeio.pas' {_frmDevolucaoMeio},
+  uTelaCompras in '..\uTelaCompras.pas' {_frmCompras},
+  uAuxiliarCompras in '..\Tela Compras\uAuxiliarCompras.pas',
+  uRotinasGenericas in '..\Rotina Generica\uRotinasGenericas.pas',
+  uAgendaLaboratorio in '..\Tela Agenda Laboratorio\uAgendaLaboratorio.pas' {_frmAgendaCompras};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(T_dm, _dm);
+  Application.CreateForm(T_frmPrincipal, _frmPrincipal);
+  Application.Run;
+end.

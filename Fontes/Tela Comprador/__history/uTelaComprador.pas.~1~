@@ -1,0 +1,29 @@
+unit uTelaComprador;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ComCtrls, Grids, DBGrids, DB, DBClient, StdCtrls;
+
+type
+  T_frmCompradorDisponivel = class(TForm)
+    Comprador: TGroupBox;
+    _cdsComprador: TClientDataSet;
+    _dsComprador: TDataSource;
+    DBGrid1: TDBGrid;
+    StatusBar1: TStatusBar;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmCompradorDisponivel: T_frmCompradorDisponivel;
+
+implementation
+
+{$R *.dfm}
+
+end.

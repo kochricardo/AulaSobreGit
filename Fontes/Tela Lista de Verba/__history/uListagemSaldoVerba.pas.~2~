@@ -1,0 +1,45 @@
+unit uListagemSaldoVerba;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, uRotinasGenericas, StdCtrls, Buttons, Grids, DBGrids, DB, DBClient,
+  ComCtrls;
+
+type
+  T_frmListagemdeverbas = class(TForm)
+    StatusBar1: TStatusBar;
+    GroupBox1: TGroupBox;
+    GroupBox2: TGroupBox;
+    Label5: TLabel;
+    _edtNrFornecedor: TEdit;
+    Label1: TLabel;
+    _edtNrComprador: TEdit;
+    _cdsListaSaldoVerba: TClientDataSet;
+    _dsListaSaldoVerba: TDataSource;
+    DBGrid1: TDBGrid;
+    _btnExecuta: TBitBtn;
+    _btnParaExcel: TBitBtn;
+    procedure _btnParaExcelClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmListagemdeverbas: T_frmListagemdeverbas;
+
+implementation
+
+{$R *.dfm}
+
+procedure T_frmListagemdeverbas._btnParaExcelClick(Sender: TObject);
+begin
+    if not _cdsListaSaldoVerba.IsEmpty then
+     GerarExcel(_cdsListaSaldoVerba);
+
+end;
+
+end.

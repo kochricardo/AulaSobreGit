@@ -1,0 +1,47 @@
+unit uCadastrodeVerbaUsuario;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ufrmModelo, DB, Menus, ActnList, ImgList, ComCtrls, Grids, DBGrids,
+  StdCtrls, Buttons, ExtCtrls, ToolWin, FMTBcd, Mask, DBCtrls, SqlExpr,
+  Provider, DBClient;
+
+type
+  T_frmCadastroVerbaUsuario = class(T_frmModelo)
+    _cdsVerbaXUsuario: TClientDataSet;
+    _dspVerbaXUsuario: TDataSetProvider;
+    _sqlVerbaXUsuario: TSQLQuery;
+    _sqlPesquisaVerbaXUsuario: TSQLQuery;
+    _dspPesquisaVerbaXUsuario: TDataSetProvider;
+    _cdsPesquisaVerbaXUsuario: TClientDataSet;
+    _cdsVerbaXUsuarioNR_VERBA: TFMTBCDField;
+    _cdsVerbaXUsuarioNR_MATRICULA: TFMTBCDField;
+    _cdsVerbaXUsuarioNM_USUARIO: TWideStringField;
+    _cdsVerbaXUsuarioNM_USUARIO_1: TWideStringField;
+    _cdsVerbaXUsuarioDT_ATUALIZACAO: TSQLTimeStampField;
+    Label1: TLabel;
+    DBEdit1: TDBEdit;
+    Label2: TLabel;
+    DBEdit2: TDBEdit;
+    Label3: TLabel;
+    DBEdit3: TDBEdit;
+    _edtFornecedor: TEdit;
+    Label4: TLabel;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmCadastroVerbaUsuario: T_frmCadastroVerbaUsuario;
+
+implementation
+
+uses uDm;
+
+{$R *.dfm}
+
+end.

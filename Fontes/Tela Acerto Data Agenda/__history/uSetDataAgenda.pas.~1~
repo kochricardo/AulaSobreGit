@@ -1,0 +1,57 @@
+unit uSetDataAgenda;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, uTelaPadrao, DB, DBClient, StdCtrls, Buttons, Grids, DBGrids,
+  ComCtrls, uDm, uRotinasGenericas, SqlExpr;
+
+type
+  T_frmPadrao1 = class(T_frmPadrao)
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmPadrao1: T_frmPadrao1;
+
+implementation
+
+{$R *.dfm}
+
+
+function GetDadosFornecedor(nrComprador:Integer):Boolean;
+var
+  QryTemp: TSQLQuery;
+  i :Integer;
+begin
+  try
+    TestaConexaoBase(_dm._conexao, nrBase);
+    QryTemp := TSQLQuery.Create(nil);
+    QryTemp.SQLConnection := _dm._conexao;
+
+    with  QryTemp DO
+    begin
+     close;
+     SQL.Clear;
+     sql.Add('SELECT DISTINCT GRUPO_FORNECEDOR.CD_FABRICANTE,');
+     sql.Add('COMPRA_MERCADORIA.CD_GRUPO_FORNECEDOR, DT_AGENDAMENTO,dagl_l');
+     sql.Add('FROM');
+     sql.Add('PRDDM.DC_GRUPO_FORNECEDOR GRUPO_FORNECEDOR,');
+     sql.Add('PRDDM.DC_COMPRA_MERCADORIA COMPRA_MERCADORIA,');
+     sql.Add('PRDDM.DCLAB');
+     sql.Add('WHERE');
+     sql.Add('GRUPO_FORNECEDOR.CD_GRUPO_FORNECEDOR= COMPRA_MERCADORIA.CD_GRUPO_FORNECEDOR');
+     sql.Add('AND COMPRA_MERCADORIA.ID_SITUACAO_MERCADORIA<>''I''');
+     sql.Add('AND nrol_l=COMPRA_MERCADORIA.CD_GRUPO_FORNECEDOR');
+     sql.Add('AND COMPRA_MERCADORIA.CD_COMPRADOR=:PnrComprador');
+    end;
+  finally
+    FreeAndNil(QryTemp);
+  end;
+
+end;
+end.

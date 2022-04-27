@@ -1,0 +1,123 @@
+unit uTelaPesquisa;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, DB, StdCtrls, Grids, DBGrids, ExtCtrls;
+
+type
+  T_frmPesquisa = class(TForm)
+    Panel1: TPanel;
+    DBGrid1: TDBGrid;
+    _cbxCampos: TComboBox;
+    _labCampos: TLabel;
+    _edtPesquisa: TEdit;
+    _lbPesquisa: TLabel;
+    _dsPesquisa: TDataSource;
+    Image1: TImage;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormShow(Sender: TObject);
+    procedure _edtPesquisaKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure _edtPesquisaChange(Sender: TObject);
+    procedure DBGrid1KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+   ListaField :Array of Integer;
+
+  end;
+
+var
+  _frmPesquisa: T_frmPesquisa;
+
+implementation
+
+uses uGenérica, uDmPrincipal;
+
+{$R *.dfm}
+
+procedure T_frmPesquisa.DBGrid1KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+ case key of
+ VK_RETURN : close;
+ end;
+
+end;
+
+procedure T_frmPesquisa.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+ Action:=caFree;
+end;
+
+procedure T_frmPesquisa.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  case key of
+   VK_ESCAPE : close;
+
+  end;
+end;
+
+procedure T_frmPesquisa.FormShow(Sender: TObject);
+var
+ i,J: Integer;
+begin
+  ConectaBanco('PRDDM','SIDM', TCustomAttribute.Create);
+  for I := 0 to Pred(_dsPesquisa.dataset.fieldCount) do
+  begin
+    if _dsPesquisa.dataset.fields[I].datatype in [ftString,ftWideString,ftFixedChar,ftInteger,ftDate,ftDateTime,ftTimeStamp,ftBCD,ftFMTBcd] then
+    begin
+       J:=_cbxCampos.items.add(_dsPesquisa.dataset.fields[i].DisplayName);
+       SetLength(ListaField,HIGH(ListaField)+2);
+       ListaField[j]:=i;
+    end;
+    if not _dsPesquisa.DataSet.Active then
+       _dsPesquisa.DataSet.Open;
+ end;
+
+end;
+
+procedure T_frmPesquisa._edtPesquisaChange(Sender: TObject);
+begin
+ if TRIM(_edtPesquisa.Text)='' then
+    _dsPesquisa.DataSet.Filtered:=false;
+
+end;
+
+procedure T_frmPesquisa._edtPesquisaKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+ case key of
+  VK_RETURN : begin
+                 if (_cbxCampos.Text<> EmptyStr) and (_edtPesquisa.Text <> EmptyStr) then
+                 begin
+                   if (_dsPesquisa.DataSet.Fields[listaField[_cbxCampos.ItemIndex]].DataType in[ftString,ftWideString,ftFixedChar]) then
+                   begin
+                    _dsPesquisa.DataSet.Filter := 'UPPER ('+_dsPesquisa.DataSet.Fields[listaField[_cbxCampos.ItemIndex]].FieldName +') LIKE '+QuotedStr(UpperCase(_edtPesquisa.Text)+'%');
+                    _dsPesquisa.DataSet.Filtered:=TRUE;
+                   end;
+                   if (_dsPesquisa.DataSet.Fields[listaField[_cbxCampos.ItemIndex]].DataType in[ftInteger,ftBCD,ftFloat,ftFMTBcd]) then
+                   begin
+                     _dsPesquisa.DataSet.Filter := _dsPesquisa.DataSet.Fields[listaField[_cbxCampos.ItemIndex]].FieldName +' = '+_edtPesquisa.Text;
+                     _dsPesquisa.DataSet.Filtered:=TRUE;
+                   end;
+                   if (_dsPesquisa.DataSet.Fields[listaField[_cbxCampos.ItemIndex]].DataType in[ftDate,ftDateTime,ftTimeStamp]) then
+                   begin
+                     _dsPesquisa.DataSet.Filter := _dsPesquisa.DataSet.Fields[listaField[_cbxCampos.ItemIndex]].FieldName +' = '+QuotedStr(_edtPesquisa.Text);
+                     _dsPesquisa.DataSet.Filtered:=TRUE;
+                   end;
+                    if not _dsPesquisa.DataSet.Active then
+                      _dsPesquisa.DataSet.Open;
+                  end;
+
+              end;
+ end;
+end;
+
+end.

@@ -1,0 +1,24 @@
+unit uDevolucaoMeio;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs;
+
+type
+  T_frmDevolucaoMeio = class(TForm)
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmDevolucaoMeio: T_frmDevolucaoMeio;
+
+implementation
+
+{$R *.dfm}
+
+end.

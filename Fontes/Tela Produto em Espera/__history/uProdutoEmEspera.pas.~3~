@@ -1,0 +1,43 @@
+unit uProdutoEmEspera;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, Grids, DBGrids, StdCtrls, ComCtrls, Buttons;
+
+type
+  T_frmProdutoEmEspera = class(TForm)
+    StatusBar1: TStatusBar;
+    GroupBox1: TGroupBox;
+    GroupBox2: TGroupBox;
+    DBGrid1: TDBGrid;
+    DBGrid2: TDBGrid;
+    _btnCancela: TBitBtn;
+    procedure _btnCancelaClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmProdutoEmEspera: T_frmProdutoEmEspera;
+
+implementation
+
+{$R *.dfm}
+
+procedure T_frmProdutoEmEspera.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  action:=cafree;
+end;
+
+procedure T_frmProdutoEmEspera._btnCancelaClick(Sender: TObject);
+begin
+ close;
+end;
+
+end.

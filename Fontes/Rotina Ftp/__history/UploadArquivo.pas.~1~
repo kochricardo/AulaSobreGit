@@ -1,0 +1,68 @@
+unit UploadArquivo;
+
+interface
+
+uses
+  Classes, IdFTP, StdCtrls, SysUtils , Dialogs;
+
+type
+  TUpload = class(TThread)
+  private
+  CFTP : TidFTP;
+   CEdit : TEdit;
+  protected
+    procedure Execute; override;
+    procedure FazUpload;  protected
+   public
+    constructor Criar(ftp : Tidftp);
+  end;
+
+implementation
+var
+     nmArquivo:String;
+
+
+{ TUpload }
+
+constructor TUpload.Criar(ftp: Tidftp);
+begin
+inherited Create(True);
+FreeOnTerminate := True;
+CFTP := ftp;
+resume;
+end;
+
+procedure TUpload.Execute;
+begin
+ If (Not Terminated) Then
+  FazUpload;
+end;
+
+procedure TUpload.FazUpload;
+begin
+ With CFTP Do
+  Begin
+   Try
+    If not Connected Then
+     Connect;
+   except
+    On E : Exception do
+     Begin
+      ShowMessage('Não conectou : ' + E.Message);
+      Exit;
+     End;
+   end;
+   Try
+    Try
+     Put(nmArquivo,ExtractFileName(nmArquivo));
+    except
+     on E : Exception do
+      ShowMessage('Erro ao fazer Upload: ' + E.Message);
+    end;
+   Finally
+    Quit;
+   End;
+  End;
+end;
+
+end.

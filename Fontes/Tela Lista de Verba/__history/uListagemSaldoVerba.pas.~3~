@@ -1,0 +1,60 @@
+unit uListagemSaldoVerba;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, uRotinasGenericas, StdCtrls, Buttons, Grids, DBGrids, DB, DBClient,
+  ComCtrls;
+
+type
+  T_frmListagemdeverbas = class(TForm)
+    StatusBar1: TStatusBar;
+    GroupBox1: TGroupBox;
+    GroupBox2: TGroupBox;
+    Label5: TLabel;
+    _edtNrFornecedor: TEdit;
+    Label1: TLabel;
+    _edtNrComprador: TEdit;
+    _cdsListaSaldoVerba: TClientDataSet;
+    _dsListaSaldoVerba: TDataSource;
+    DBGrid1: TDBGrid;
+    _btnExecuta: TBitBtn;
+    _btnParaExcel: TBitBtn;
+    Label2: TLabel;
+    _edtNrVerba: TEdit;
+    procedure _btnParaExcelClick(Sender: TObject);
+    procedure _btnExecutaClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmListagemdeverbas: T_frmListagemdeverbas;
+
+implementation
+
+{$R *.dfm}
+
+procedure T_frmListagemdeverbas._btnExecutaClick(Sender: TObject);
+var
+  nrVerba,
+  NrFornecedor,
+  NrComprador:Integer;
+begin
+    nrVerba:=StrToIntDef(_edtNrVerba.Text,0);
+    NrFornecedor:=StrToIntDef(_edtNrFornecedor.Text,0);
+    NrComprador:=StrToIntDef(_edtNrComprador.Text,0);
+    _cdsListaSaldoVerba:=get
+end;
+
+procedure T_frmListagemdeverbas._btnParaExcelClick(Sender: TObject);
+begin
+    if not _cdsListaSaldoVerba.IsEmpty then
+     GerarExcel(_cdsListaSaldoVerba);
+
+end;
+
+end.
