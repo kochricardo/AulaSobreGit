@@ -1,0 +1,52 @@
+unit uComparacaoAnual;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, Grids, DBGrids, StdCtrls, Buttons, DB, DBClient;
+
+type
+  T_frmComparacaoAnual = class(TForm)
+    GroupBox1: TGroupBox;
+    Label1: TLabel;
+    Label18: TLabel;
+    _edtNrComprador: TEdit;
+    _cbxOpcaoCDs: TComboBox;
+    _btnExecuta: TBitBtn;
+    _btnParaExcel: TBitBtn;
+    GroupBox2: TGroupBox;
+    _dbgGridItens: TDBGrid;
+    _cdsComparacaoItem: TClientDataSet;
+    _dsComparacaoItem: TDataSource;
+    _cdsComparacaoItemCD_PRODUTO: TIntegerField;
+    _cdsComparacaoItemNM_PRODUTO: TStringField;
+    _cdsComparacaoItemDS_APRESENTACAO_PRODUTO: TStringField;
+    _cdsComparacaoItemNR_UNIDADES_PERIODO: TIntegerField;
+    _cdsComparacaoItemNM_PERIODO_01: TStringField;
+    _cdsComparacaoItemNM_PERIODO_02: TStringField;
+    _cdsComparacaoItemNM_PERIODO_03: TStringField;
+    _cdsComparacaoItemNM_PERIODO_04: TStringField;
+    _cdsComparacaoItemNM_PERIODO_05: TStringField;
+    _cdsComparacaoItemNM_PERIODO_06: TStringField;
+    _cdsComparacaoItemNM_PERIODO_07: TStringField;
+    _cdsComparacaoItemNM_PERIODO_08: TStringField;
+    _cdsComparacaoItemNM_PERIODO_09: TStringField;
+    _cdsComparacaoItemNM_PERIODO_10: TStringField;
+    _cdsComparacaoItemNM_PERIODO_11: TStringField;
+    _cdsComparacaoItemNM_PERIODO_12: TStringField;
+    _cdsComparacaoItemID_PRODUTO_SEQ: TStringField;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmComparacaoAnual: T_frmComparacaoAnual;
+
+implementation
+
+{$R *.dfm}
+
+end.

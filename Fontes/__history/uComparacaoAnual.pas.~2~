@@ -1,0 +1,33 @@
+unit uComparacaoAnual;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, Grids, DBGrids, StdCtrls, Buttons;
+
+type
+  T_frmComparacaoAnual = class(TForm)
+    GroupBox1: TGroupBox;
+    Label1: TLabel;
+    Label18: TLabel;
+    _edtNrComprador: TEdit;
+    _cbxOpcaoCDs: TComboBox;
+    _btnExecuta: TBitBtn;
+    _btnParaExcel: TBitBtn;
+    GroupBox2: TGroupBox;
+    _dbgGridItens: TDBGrid;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  _frmComparacaoAnual: T_frmComparacaoAnual;
+
+implementation
+
+{$R *.dfm}
+
+end.

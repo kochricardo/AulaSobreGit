@@ -1,0 +1,410 @@
+object _frmAplicarVerbaPedido: T_frmAplicarVerbaPedido
+  Left = 0
+  Top = 0
+  Caption = 'Aplicar Verba em Pedido'
+  ClientHeight = 608
+  ClientWidth = 844
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  FormStyle = fsMDIChild
+  KeyPreview = True
+  OldCreateOrder = False
+  Visible = True
+  OnClose = FormClose
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object StatusBar1: TStatusBar
+    Left = 0
+    Top = 589
+    Width = 844
+    Height = 19
+    Panels = <>
+    ExplicitLeft = 568
+    ExplicitTop = 336
+    ExplicitWidth = 0
+  end
+  object GroupBox1: TGroupBox
+    Left = 0
+    Top = 0
+    Width = 844
+    Height = 90
+    Align = alTop
+    Caption = 'Filtro Capa Pedido'
+    TabOrder = 1
+    ExplicitLeft = -152
+    ExplicitWidth = 996
+    object Label1: TLabel
+      Left = 27
+      Top = 27
+      Width = 43
+      Height = 13
+      Caption = 'Dt. Inicio'
+    end
+    object Label2: TLabel
+      Left = 27
+      Top = 53
+      Width = 40
+      Height = 13
+      Caption = 'Dt. Final'
+    end
+    object Label3: TLabel
+      Left = 189
+      Top = 8
+      Width = 53
+      Height = 13
+      Caption = 'Comprador'
+    end
+    object Label4: TLabel
+      Left = 189
+      Top = 46
+      Width = 55
+      Height = 13
+      Caption = 'Laboratorio'
+    end
+    object _dtpDtInicio: TDateTimePicker
+      Left = 82
+      Top = 19
+      Width = 81
+      Height = 21
+      Date = 41628.447833101860000000
+      Time = 41628.447833101860000000
+      TabOrder = 0
+    end
+    object _dtpDtFinal: TDateTimePicker
+      Left = 82
+      Top = 45
+      Width = 81
+      Height = 21
+      Date = 41628.447833101860000000
+      Time = 41628.447833101860000000
+      TabOrder = 1
+    end
+    object _edtNumeroComprador: TEdit
+      Left = 189
+      Top = 24
+      Width = 57
+      Height = 19
+      Alignment = taRightJustify
+      Ctl3D = False
+      NumbersOnly = True
+      ParentCtl3D = False
+      TabOrder = 2
+    end
+    object BitBtn1: TBitBtn
+      Left = 453
+      Top = 21
+      Width = 155
+      Height = 25
+      BiDiMode = bdRightToLeft
+      Caption = 'Mostra Pedidos'
+      Default = True
+      DoubleBuffered = True
+      Glyph.Data = {
+        76010000424D7601000000000000760000002800000020000000100000000100
+        04000000000000010000120B0000120B00001000000000000000000000000000
+        800000800000008080008000000080008000808000007F7F7F00BFBFBF000000
+        FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00550000000005
+        555555777777777FF5555500000000805555557777777777FF555550BBBBB008
+        05555557F5FFF7777FF55550B000B030805555F7F777F7F777F550000000B033
+        005557777777F7F5775550BBBBB00033055557F5FFF777F57F5550B000B08033
+        055557F77757F7F57F5550BBBBB08033055557F55557F7F57F5550BBBBB00033
+        055557FFFFF777F57F5550000000703305555777777757F57F555550FFF77033
+        05555557FFFFF7FF7F55550000000003055555777777777F7F55550777777700
+        05555575FF5555777F55555003B3B3B00555555775FF55577FF55555500B3B3B
+        005555555775FFFF77F555555570000000555555555777777755}
+      NumGlyphs = 2
+      ParentBiDiMode = False
+      ParentDoubleBuffered = False
+      TabOrder = 3
+      OnClick = BitBtn1Click
+    end
+    object _edtNumeroFornecedor: TEdit
+      Left = 189
+      Top = 65
+      Width = 57
+      Height = 19
+      Alignment = taRightJustify
+      Ctl3D = False
+      NumbersOnly = True
+      ParentCtl3D = False
+      TabOrder = 4
+    end
+    object _rgStatus: TRadioGroup
+      Left = 262
+      Top = 8
+      Width = 185
+      Height = 79
+      Caption = 'Situa'#231#227'o Pedido'
+      Ctl3D = False
+      Enabled = False
+      ItemIndex = 2
+      Items.Strings = (
+        'Todos'
+        'Faturados'
+        'Novos'
+        'Novos/Faturados/Pendentes')
+      ParentCtl3D = False
+      TabOrder = 5
+    end
+  end
+  object GroupBox2: TGroupBox
+    Left = 0
+    Top = 90
+    Width = 844
+    Height = 191
+    Align = alTop
+    Caption = 'Pedido(s)'
+    TabOrder = 2
+    ExplicitLeft = 2
+    ExplicitTop = -101
+    ExplicitWidth = 840
+    object _dbgcapaPedido: TDBGrid
+      Left = 2
+      Top = 15
+      Width = 840
+      Height = 174
+      Align = alClient
+      Ctl3D = False
+      DataSource = _dspedido
+      ParentCtl3D = False
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+    end
+  end
+  object GroupBox4: TGroupBox
+    Left = 0
+    Top = 281
+    Width = 844
+    Height = 161
+    Align = alTop
+    Caption = 'Item Pedido(s)'
+    TabOrder = 3
+    ExplicitTop = 285
+    object _dbgItemPedido: TDBGrid
+      Left = 2
+      Top = 15
+      Width = 840
+      Height = 144
+      Align = alClient
+      Ctl3D = False
+      DataSource = _dsItemPedido
+      ParentCtl3D = False
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      OnDrawColumnCell = _dbgItemPedidoDrawColumnCell
+    end
+  end
+  object GroupBox3: TGroupBox
+    Left = 0
+    Top = 442
+    Width = 844
+    Height = 144
+    Align = alTop
+    Caption = 'Dados Para Verba no Pedido'
+    TabOrder = 4
+    ExplicitTop = 439
+    object Label5: TLabel
+      Left = 3
+      Top = 18
+      Width = 47
+      Height = 13
+      Caption = 'Nr.Pedido'
+    end
+    object Label6: TLabel
+      Left = 4
+      Top = 79
+      Width = 43
+      Height = 13
+      Caption = 'Nr.Verba'
+    end
+    object Label7: TLabel
+      Left = 120
+      Top = 79
+      Width = 80
+      Height = 13
+      Caption = 'Valor Para Verba'
+    end
+    object Label8: TLabel
+      Left = 215
+      Top = 79
+      Width = 52
+      Height = 13
+      Caption = '% P/Verba'
+    end
+    object Label9: TLabel
+      Left = 372
+      Top = 70
+      Width = 117
+      Height = 13
+      Caption = 'Valor de Verba calculado'
+    end
+    object _edtNrPedido: TEdit
+      Left = 3
+      Top = 35
+      Width = 72
+      Height = 19
+      Ctl3D = False
+      ParentCtl3D = False
+      ReadOnly = True
+      TabOrder = 0
+    end
+    object _rgTipoDesconto: TRadioGroup
+      Left = 120
+      Top = 17
+      Width = 185
+      Height = 42
+      Caption = 'Tipo de Desconto'
+      Columns = 2
+      ItemIndex = 1
+      Items.Strings = (
+        'Valor'
+        '% P/ Verba')
+      TabOrder = 1
+    end
+    object _btnTesteValor: TBitBtn
+      Left = 372
+      Top = 24
+      Width = 165
+      Height = 25
+      Caption = 'Teste de Valores Por Item'
+      DoubleBuffered = True
+      ParentDoubleBuffered = False
+      TabOrder = 2
+      OnClick = _btnTesteValorClick
+    end
+    object Edit2: TEdit
+      Left = 372
+      Top = 85
+      Width = 133
+      Height = 19
+      Alignment = taRightJustify
+      Ctl3D = False
+      ParentCtl3D = False
+      ReadOnly = True
+      TabOrder = 3
+    end
+    object _edtValorParaverba: TEdit
+      Left = 120
+      Top = 95
+      Width = 80
+      Height = 19
+      Alignment = taRightJustify
+      Ctl3D = False
+      NumbersOnly = True
+      ParentCtl3D = False
+      TabOrder = 4
+    end
+    object _edtNumeroVerba: TEdit
+      Left = 3
+      Top = 95
+      Width = 72
+      Height = 19
+      Alignment = taRightJustify
+      Ctl3D = False
+      NumbersOnly = True
+      ParentCtl3D = False
+      TabOrder = 5
+      OnKeyDown = _edtNumeroVerbaKeyDown
+    end
+    object _edtPcVerba: TEdit
+      Left = 215
+      Top = 95
+      Width = 80
+      Height = 19
+      Alignment = taRightJustify
+      Ctl3D = False
+      NumbersOnly = True
+      ParentCtl3D = False
+      TabOrder = 6
+    end
+  end
+  object _dspedido: TDataSource
+    DataSet = _cdsPedido
+    OnDataChange = _dspedidoDataChange
+    Left = 696
+    Top = 56
+  end
+  object _cdsPedido: TClientDataSet
+    Aggregates = <
+      item
+        Active = True
+        AggregateName = 'NR_TOTAL_ITENS'
+        Expression = 'SUM(NR_ITENS)'
+        Visible = False
+      end>
+    AggregatesActive = True
+    Params = <>
+    ProviderName = '_dspGenerica'
+    RemoteServer = _dm._LocalConexao
+    Left = 696
+    Top = 16
+    object _cdsPedidoNR_TOTAL_ITENS: TAggregateField
+      FieldName = 'NR_TOTAL_ITENS'
+      Visible = True
+      Active = True
+      Expression = 'SUM(NR_ITENS)'
+    end
+    object _cdsPedidoNR_TOTAL_UNIDADES: TAggregateField
+      FieldName = 'NR_TOTAL_UNIDADES'
+      Active = True
+      Expression = 'SUM(NR_UNIDADES)'
+    end
+    object _cdsPedidoVL_PEDIDO_FORNECEDOR: TAggregateField
+      FieldName = 'VL_PEDIDO_FORNECEDOR'
+      Active = True
+      Expression = 'SUM(VL_PEDIDO_FABR)'
+    end
+    object _cdsPedidoVL_PEDIDO_CUSTO: TAggregateField
+      FieldName = 'VL_PEDIDO_CUSTO'
+      Active = True
+      Expression = 'SUM(VL_PEDIDO)'
+    end
+    object _cdsPedidoNR_UNIDADES_FAT: TAggregateField
+      FieldName = 'NR_UNIDADES_FAT'
+      Active = True
+      Expression = 'SUM(NR_FATURADO)'
+    end
+    object _cdsPedidoQT_UNIDADES_FAT: TAggregateField
+      FieldName = 'QT_UNIDADES_FAT'
+      Active = True
+      Expression = 'SUM(QT_FATURADO)'
+    end
+    object _cdsPedidoVL_FATURADO_CUSTO: TAggregateField
+      FieldName = 'VL_FATURADO_CUSTO'
+      Active = True
+      Expression = 'SUM(VL_PEDIDO_FAT)'
+    end
+    object _cdsPedidoVL_FATURADO_FORNEC: TAggregateField
+      FieldName = 'VL_FATURADO_FORNEC'
+      Active = True
+      Expression = 'SUM(VL_PED_FAT_FABR)'
+    end
+  end
+  object _dsItemPedido: TDataSource
+    DataSet = _cdsItemPedido
+    Left = 760
+    Top = 56
+  end
+  object _cdsItemPedido: TClientDataSet
+    Aggregates = <>
+    AggregatesActive = True
+    Params = <>
+    ProviderName = '_dspGenerica'
+    RemoteServer = _dm._LocalConexao
+    Left = 760
+    Top = 8
+  end
+end
